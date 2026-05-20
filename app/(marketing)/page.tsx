@@ -9,6 +9,7 @@ import { BrandWordmark } from "@/components/atoms";
 import {
   BulkOfferBanner,
   CategoryFilterSection,
+  FaqSection,
   HeroBanner,
   IndustriesSection,
   ProductGridSection,
@@ -72,8 +73,9 @@ export default function HomePage() {
         7.  Industries     → white
         8.  WhyChoose      → muted
         9.  Companies      → white
-        10. RequestQuote   → dark (excluded)
-        11. Footer         → dark (excluded)
+        10. FAQ            → muted
+        11. RequestQuote   → dark (excluded)
+        12. Footer         → dark (excluded)
       */}
 
       <CategoryFilterSection
@@ -217,6 +219,44 @@ export default function HomePage() {
             variant: "logo",
             alt: "Drug International",
             logo: <BrandWordmark text="DRUG INT'L" color="#1e3a8a" />,
+          },
+        ]}
+      />
+
+      <FaqSection
+        title="Frequently asked questions"
+        description="Quick answers on ordering, lead times and bulk supply. Don't see your question? Reach us on WhatsApp."
+        tone="muted"
+        items={[
+          {
+            question: "What's the minimum order quantity?",
+            answer:
+              "For most protective wear we accept orders from 100 units, but pricing is best on orders above 500. Share your requirement on the contact form and we'll quote both tiers.",
+          },
+          {
+            question: "How quickly can you deliver bulk orders?",
+            answer:
+              "Standard lead time is 3–7 business days for in-stock items within Bangladesh. Larger or custom-spec orders typically ship in 10–15 business days. We confirm exact dates at quotation.",
+          },
+          {
+            question: "Do you supply to industries outside pharmaceutical?",
+            answer:
+              "Yes. We regularly supply food processing, packaging, hospitals & laboratories, and general production units. The product range is built for hygiene-sensitive and controlled environments across all of these.",
+          },
+          {
+            question: "Can I get product samples before placing a bulk order?",
+            answer:
+              "We can arrange paid samples for procurement teams evaluating a new line. Sample cost is typically adjusted against the first bulk order. Mention this when requesting a quote.",
+          },
+          {
+            question: "How do I request a quotation?",
+            answer:
+              "Use the Request Quote form on the contact page or message us on WhatsApp with the items, quantities, sizes and delivery window. You'll usually get a written quotation back the same business day.",
+          },
+          {
+            question: "What payment terms do you offer for repeat buyers?",
+            answer:
+              "First orders are typically advance payment. Established procurement partners can move to partial advance with balance on delivery, or formal credit terms after a few completed cycles.",
           },
         ]}
       />
