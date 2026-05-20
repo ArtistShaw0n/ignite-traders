@@ -14,6 +14,8 @@ export interface FaqSectionProps {
   items: FaqItem[];
   tone?: "default" | "muted";
   defaultOpenIndex?: number;
+  /** DOM id for anchor links (e.g. /#faq from the header). */
+  id?: string;
   className?: string;
 }
 
@@ -24,12 +26,14 @@ export function FaqSection({
   items,
   tone = "default",
   defaultOpenIndex = 0,
+  id = "faq",
   className,
 }: FaqSectionProps) {
   return (
     <section
+      id={id}
       className={clsx(
-        "section-pad-sm",
+        "section-pad-sm scroll-mt-24",
         tone === "muted" && "bg-[var(--bg-surface-muted)]",
         className,
       )}

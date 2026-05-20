@@ -35,6 +35,7 @@ const NAV: NavLink[] = [
       { label: "Goggles", href: "/products?category=goggles" },
     ],
   },
+  { label: "FAQ", href: "/#faq" },
   { label: "Contact Us", href: "/contact" },
   { label: "Design System", href: "/design-system" },
 ];
