@@ -139,6 +139,32 @@ vercel logs <url>        # View deployment logs
 
 ---
 
+## Milestone snapshots — GitHub Releases
+
+When the user says "release", "snapshot", "milestone", "tag this version", or similar:
+
+1. Determine the next version using semver:
+   - `v0.X.0` = pre-launch features
+   - `v1.0.0` = first public launch
+   - `v1.X.0` = minor updates after launch
+   - `v1.X.Y` = patches/fixes
+2. Make sure working tree is clean (`git status` should be empty)
+3. Create an annotated tag and push it:
+   ```bash
+   git tag -a v0.X.0 -m "Release v0.X.0 — <short description>"
+   git push origin v0.X.0
+   ```
+4. Use `gh` to create the release with auto-generated notes:
+   ```bash
+   gh release create v0.X.0 --generate-notes --title "v0.X.0 — <short description>"
+   ```
+5. Confirm to the user with the release URL:
+   `https://github.com/ArtistShaw0n/ignite-traders/releases/tag/v0.X.0`
+
+GitHub auto-creates downloadable `.zip` and `.tar.gz` for each release. These are the "exports per milestone" — accessible from anywhere, never expire.
+
+---
+
 ## ⚠️ Important — read before writing code
 
 See `AGENTS.md` (imported above). This project uses a version of Next.js with breaking changes from typical training data. Before writing Next.js-specific code (routing, data fetching, metadata, etc.), check `node_modules/next/dist/docs/` for the relevant guide.
