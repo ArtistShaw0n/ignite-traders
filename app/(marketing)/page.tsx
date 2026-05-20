@@ -58,6 +58,11 @@ export default function HomePage() {
         description="IGNITE delivers gowns, gloves, masks, shoes and lab safety gear — built for pharmaceutical production lines."
         primaryCta={{ label: "Browse Products", href: "/products" }}
         secondaryCta={{ label: "Request Quote", href: "/contact" }}
+        whatsappCta={{
+          phone: SITE_WHATSAPP,
+          message: "Hi! I'd like to know more about IGNITE products.",
+          label: "WhatsApp Chat",
+        }}
       />
 
       {/*

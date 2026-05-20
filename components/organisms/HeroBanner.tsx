@@ -1,4 +1,5 @@
 import { Button } from "@/components/atoms/Button";
+import { WhatsAppCTA } from "@/components/molecules/WhatsAppCTA";
 import { clsx } from "@/lib/clsx";
 
 export interface HeroBannerProps {
@@ -7,6 +8,7 @@ export interface HeroBannerProps {
   description: string;
   primaryCta?: { label: string; href: string };
   secondaryCta?: { label: string; href: string };
+  whatsappCta?: { phone: string; message?: string; label?: string };
   className?: string;
 }
 
@@ -21,6 +23,7 @@ export function HeroBanner({
   description,
   primaryCta,
   secondaryCta,
+  whatsappCta,
   className,
 }: HeroBannerProps) {
   return (
@@ -55,6 +58,14 @@ export function HeroBanner({
                 >
                   {secondaryCta.label}
                 </Button>
+              )}
+              {whatsappCta && (
+                <WhatsAppCTA
+                  phone={whatsappCta.phone}
+                  message={whatsappCta.message}
+                  label={whatsappCta.label ?? "WhatsApp Chat"}
+                  size="md"
+                />
               )}
             </div>
           </div>
