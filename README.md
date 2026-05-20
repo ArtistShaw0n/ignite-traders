@@ -1,36 +1,122 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# IGNITE — Protective Wear for Pharma Production
 
-## Getting Started
+Marketing site for IGNITE Traders — protective wear & safety supply for pharmaceutical production units.
 
-First, run the development server:
+Built with **Next.js 16 (App Router + Turbopack)**, **React 19**, **TypeScript**, and **Tailwind CSS v4**.
+
+---
+
+## Tech stack
+
+| Layer            | Tool                                |
+| ---------------- | ----------------------------------- |
+| Framework        | Next.js 16.2 (App Router, Turbopack) |
+| UI               | React 19, Tailwind CSS v4           |
+| Language         | TypeScript 5                        |
+| Animation        | Framer Motion 12                    |
+| Icons            | lucide-react                        |
+| Forms            | react-hook-form                     |
+| Linting          | ESLint (eslint-config-next)         |
+| Formatting       | Prettier                            |
+
+---
+
+## Getting started
+
+### Prerequisites
+
+- **Node.js**: see `.nvmrc` (Node 22.x). If using `nvm`, run `nvm use`.
+- **npm**: comes with Node.
+
+### Install & run
 
 ```bash
+# Install dependencies
+npm install
+
+# Copy env template (then edit values)
+cp .env.example .env.local
+
+# Start dev server on port 3003
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3003](http://localhost:3003) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Available scripts
 
-## Learn More
+| Command                | What it does                              |
+| ---------------------- | ----------------------------------------- |
+| `npm run dev`          | Start dev server (Turbopack) on port 3003 |
+| `npm run build`        | Build for production                      |
+| `npm run start`        | Start production server                   |
+| `npm run lint`         | Run ESLint                                |
+| `npm run format`       | Format all files with Prettier            |
+| `npm run format:check` | Check formatting without writing          |
+| `npm run type-check`   | Run TypeScript without emitting files     |
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+ignite-website/
+├── app/                        # Next.js App Router
+│   ├── (marketing)/            # Marketing route group
+│   │   ├── about/
+│   │   ├── contact/
+│   │   ├── products/
+│   │   │   └── [slug]/         # Dynamic product detail
+│   │   ├── layout.tsx
+│   │   └── page.tsx            # Home
+│   ├── design-system/          # Internal design-system showcase
+│   ├── preview/                # Component previews
+│   ├── globals.css             # Tailwind v4 + design tokens
+│   ├── layout.tsx              # Root layout
+│   ├── not-found.tsx
+│   ├── robots.ts               # SEO: robots.txt
+│   └── sitemap.ts              # SEO: sitemap.xml
+├── components/
+│   ├── atoms/                  # Smallest UI primitives
+│   ├── molecules/              # Composite UI
+│   └── organisms/              # Page sections
+├── lib/                        # Utilities (clsx, jsonld, products, site)
+├── data/products.json          # Product catalog data
+└── public/                     # Static assets
+```
 
-## Deploy on Vercel
+Component architecture follows **atomic design** (atoms → molecules → organisms).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Environment variables
+
+See `.env.example` for the full list. Copy it to `.env.local` for local overrides.
+
+| Variable               | Purpose                                  |
+| ---------------------- | ---------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL` | Canonical URL (sitemap, robots, JSON-LD) |
+
+---
+
+## Deployment
+
+The project is platform-agnostic. To deploy on **Vercel**:
+
+```bash
+npx vercel
+```
+
+Or push to GitHub and import the repo at [vercel.com/new](https://vercel.com/new).
+
+For other platforms (Netlify, Cloudflare Pages, Docker), see Next.js [deployment docs](https://nextjs.org/docs/app/building-your-application/deploying).
+
+---
+
+## Notes
+
+- **Tailwind v4** is configured via `@import "tailwindcss"` in `app/globals.css` — there is no `tailwind.config.js`.
+- **Path alias** `@/*` maps to the project root (see `tsconfig.json`).
+- See `AGENTS.md` for agent-specific conventions.
