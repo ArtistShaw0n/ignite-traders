@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Logo } from "@/components/atoms/Logo";
 import { Button } from "@/components/atoms/Button";
+import { ThemeToggle } from "@/components/atoms/ThemeToggle";
 import { CallUsBlock } from "@/components/molecules/CallUsBlock";
 import { clsx } from "@/lib/clsx";
 
@@ -71,6 +72,7 @@ export function Header({
           <div className="hidden md:block">
             <CallUsBlock phone={phone} />
           </div>
+          <ThemeToggle />
           <Button
             href={`https://wa.me/${whatsapp}`}
             variant="whatsapp"

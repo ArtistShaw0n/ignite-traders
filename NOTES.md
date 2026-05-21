@@ -1,28 +1,32 @@
-# Session Notes — 2026-05-20 (office)
+# Session Notes — 2026-05-21 (codespaces)
 
 ## ✅ Completed today
 
-- **FAQ section on homepage** (commit `d2970ad`, deployed to https://ignite-traders.vercel.app/):
-  - New organism [components/organisms/FaqSection.tsx](components/organisms/FaqSection.tsx) — server component, native `<details>` accordion, rotating `+` icon.
-  - Wired into [app/(marketing)/page.tsx](<app/(marketing)/page.tsx>) between Trusted Companies and Request Quote CTA (`tone="muted"`).
-  - 6 B2B FAQs (MOQ, lead time, industries, samples, quotes, payment terms).
-- **FAQ anchor wiring** (uncommitted — being pushed now):
-  - `id` prop on [FaqSection.tsx](components/organisms/FaqSection.tsx) with default `"faq"` + `scroll-mt-24` for sticky-header offset.
-  - "FAQ" link added to header nav in [Header.tsx](components/organisms/Header.tsx) pointing to `/#faq`.
+- **Removed WhatsApp CTA from hero banner** (commit `6f15e80`, deployed):
+  - Stripped `whatsappCta` prop from [components/organisms/HeroBanner.tsx](components/organisms/HeroBanner.tsx) — interface, destructure, JSX all cleaned up.
+  - Removed `whatsappCta` argument from `<HeroBanner>` call in [app/(marketing)/page.tsx](<app/(marketing)/page.tsx>).
+  - `WhatsAppCTA` component itself untouched — still used by `ProductInfoCard`, `ContactCard`, `RequestQuoteCTA`, `design-system` page, and Header WhatsApp button.
+- **Added theme (dark/light) toggle to site header** (this commit):
+  - Wired existing [components/atoms/ThemeToggle.tsx](components/atoms/ThemeToggle.tsx) into [components/organisms/Header.tsx](components/organisms/Header.tsx) between CallUsBlock and WhatsApp button — visible at all breakpoints.
+  - Fixed `ThemeToggle` initial-paint bug: previously rendered an empty bordered button before hydration (no icon visible). Now renders both Moon and Sun icons with CSS `hidden`/`block` toggle, so an icon always shows from first paint without causing a hydration mismatch.
+  - Toggle persists theme to `localStorage` and reads `prefers-color-scheme` on first visit.
 
 ## 🚧 In progress (WIP)
 
-- None — all changes from this session are committed and pushed.
+- None — both items above are commit-ready and being pushed in this session.
 
 ## ❓ Open questions / blockers
 
-- None.
+- **Theme-init FOUC (low priority):** The `themeInitScript` in [app/layout.tsx](app/layout.tsx) is declared via `<Script id="theme-init" strategy="beforeInteractive">{...}</Script>` but Next.js 16 (App Router + Turbopack) actually injects it via `__next_s.push(...)` after hydration rather than inlining it in `<head>` pre-paint. Result: dark-theme users may briefly see light bg on first load before the script runs. Fix would be to render a raw `<script dangerouslySetInnerHTML={{__html: themeInitScript}} />` directly inside the `<head>` in the root layout. Not blocking — toggle works correctly post-hydration.
 
 ## ▶️ Next steps
 
-- Add `faqJsonLd()` helper to [lib/jsonld.ts](lib/jsonld.ts) and inject FAQPage schema on the homepage for SEO.
-- Consider localising FAQ copy for Bangla audience (or providing a `/bn` route group).
-- Audit other organism sections for missing `id`/`scroll-mt-24` so footer/header anchor links land cleanly.
+- **Theme-init inline fix** — as above, swap the `<Script>` for a raw `<script dangerouslySetInnerHTML>` in `<head>` to eliminate the FOUC for users with persisted dark theme.
+- **Carry-overs from yesterday's session:**
+  - Add `faqJsonLd()` helper to [lib/jsonld.ts](lib/jsonld.ts) and inject FAQPage schema on the homepage for SEO.
+  - Consider localising FAQ copy for Bangla audience (or providing a `/bn` route group).
+  - Audit other organism sections for missing `id`/`scroll-mt-24` so footer/header anchor links land cleanly.
+- **Theme-aware audit:** A few molecules/organisms (`HeroBanner`, `Footer`, `BulkOfferBanner`, `CountdownTimer`, `BulkQuoteCTA`) use hardcoded `bg-ink-900`/`text-white`. Today's quick audit confirmed these are all in intentionally-dark sections — but worth a deliberate pass in case dark-mode polish reveals contrast issues.
 
 ---
 
