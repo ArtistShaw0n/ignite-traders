@@ -13,11 +13,13 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "db:peek": "tsx db/peek.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
     "@neondatabase/serverless": "^1.1.0",
+    "@react-email/components": "^1.0.12",
     "drizzle-orm": "^0.45.2",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.14.0",
@@ -25,6 +27,7 @@
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-hook-form": "^7.75.0",
+    "resend": "^6.12.4",
     "zod": "^4.4.3"
   },
   "devDependencies": {

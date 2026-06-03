@@ -3,7 +3,9 @@
 import { createHash } from "node:crypto";
 import { headers } from "next/headers";
 import { db } from "@/db/client";
-import { inquiries } from "@/db/schema";
+import { inquiries, products } from "@/db/schema";
+import { eq } from "drizzle-orm";
+import { sendInquiryEmails } from "@/lib/email";
 import { inquirySchema } from "@/lib/validation/inquiry";
 
 export type SubmitInquiryResult =
@@ -77,7 +79,38 @@ export async function submitInquiry(
       })
       .returning({ id: inquiries.id });
 
-    // TODO Phase 3: send Resend emails (admin notification + user confirmation).
+    // Fetch product title if this inquiry is tied to one, so the email
+    // subject can show it. Done after the insert so the inquiry lands
+    // even if this lookup fails.
+    let productTitle: string | null = null;
+    if (parsed.data.productId) {
+      try {
+        const [p] = await db
+          .select({ title: products.title })
+          .from(products)
+          .where(eq(products.id, parsed.data.productId))
+          .limit(1);
+        productTitle = p?.title ?? null;
+      } catch {
+        // Non-fatal — email just won't include the title.
+      }
+    }
+
+    // Send admin notification + user confirmation. Awaited so the
+    // function stays warm until both attempts settle (Resend typically
+    // resolves in <1s). Failures are logged to `emailLog` and do not
+    // surface to the caller — the inquiry is already saved.
+    await sendInquiryEmails({
+      inquiryId: row.id,
+      name: parsed.data.name,
+      company: parsed.data.company || null,
+      email: parsed.data.email,
+      phone: parsed.data.phone || null,
+      message: parsed.data.message,
+      quantity: parsed.data.quantity ?? null,
+      source: parsed.data.source,
+      productTitle,
+    });
 
     return { ok: true, id: row.id };
   } catch (err) {
