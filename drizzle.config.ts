@@ -1,5 +1,9 @@
-import "dotenv/config";
+import { config as loadEnv } from "dotenv";
 import { defineConfig } from "drizzle-kit";
+
+// Next.js convention: secrets live in .env.local (not .env). drizzle-kit
+// runs outside Next.js so we load it explicitly here.
+loadEnv({ path: ".env.local" });
 
 /**
  * Drizzle Kit config — drives schema migrations + studio.
