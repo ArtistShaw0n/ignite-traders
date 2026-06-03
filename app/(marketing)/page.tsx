@@ -45,10 +45,15 @@ function toCard(p: Product): ProductCardProps {
 // calling Date.now() during render.
 const OFFER_END_DATE = new Date(Date.now() + 23 * 24 * 60 * 60 * 1000);
 
-export default function HomePage() {
-  const featured = getFeaturedProducts(4).map(toCard);
-  const protectiveGowns = getProtectiveGowns(4).map(toCard);
-  const bestsellers = getBestsellers(4).map(toCard);
+export default async function HomePage() {
+  const [featuredRows, protectiveGownRows, bestsellerRows] = await Promise.all([
+    getFeaturedProducts(4),
+    getProtectiveGowns(4),
+    getBestsellers(4),
+  ]);
+  const featured = featuredRows.map(toCard);
+  const protectiveGowns = protectiveGownRows.map(toCard);
+  const bestsellers = bestsellerRows.map(toCard);
 
   return (
     <>

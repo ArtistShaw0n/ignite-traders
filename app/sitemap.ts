@@ -3,7 +3,7 @@ import { getAllProducts } from "@/lib/products";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://ignitetradesbd.com";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticPages: MetadataRoute.Sitemap = [
@@ -33,7 +33,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  const productPages: MetadataRoute.Sitemap = getAllProducts().map((p) => ({
+  const productPages: MetadataRoute.Sitemap = (await getAllProducts()).map((p) => ({
     url: `${SITE_URL}/products/${p.slug}`,
     lastModified: now,
     changeFrequency: "monthly",

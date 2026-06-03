@@ -26,7 +26,7 @@ export const products = pgTable(
     title: text("title").notNull(),
     categoryLabel: text("category_label").notNull(),
     categorySlug: text("category_slug").notNull(),
-    description: text("description"),
+    description: text("description").notNull(),
     sizes: text("sizes")
       .array()
       .notNull()
@@ -34,7 +34,13 @@ export const products = pgTable(
     images: jsonb("images")
       .notNull()
       .default(sql`'[]'::jsonb`),
-    badge: text("badge"),
+    // { color: "bestseller" | "bulk" | "new", label: string } | null
+    badge: jsonb("badge"),
+    // Spec fields ported from the legacy products.json shape.
+    sku: text("sku").notNull(),
+    material: text("material").notNull(),
+    usageArea: text("usage_area").notNull(),
+    bulkSupply: text("bulk_supply").notNull(),
     featured: boolean("featured").notNull().default(false),
     bestseller: boolean("bestseller").notNull().default(false),
     isProtectiveGown: boolean("is_protective_gown").notNull().default(false),

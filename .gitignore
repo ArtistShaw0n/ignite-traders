@@ -49,6 +49,7 @@ next-env.d.ts
 # Claude Code (keep shared config, ignore local overrides)
 .claude/settings.local.json
 .claude/.credentials.json
+.claude/scheduled_tasks.lock
 
 # OS junk
 Thumbs.db

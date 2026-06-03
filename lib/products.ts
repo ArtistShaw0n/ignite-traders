@@ -1,11 +1,28 @@
-import productsData from "@/data/products.json";
+import { and, asc, desc, eq, ne } from "drizzle-orm";
+import { db } from "@/db/client";
+import { products as productsTable } from "@/db/schema";
 
 export interface ProductBadge {
   color: "bestseller" | "bulk" | "new";
   label: string;
 }
 
+/**
+ * Product shape used across the marketing site.
+ *
+ * Sourced from the `products` table in Postgres (Phase 7). The shape is
+ * deliberately kept close to the pre-Phase-7 JSON layout so existing
+ * consumers (cards, hero, JSON-LD, sitemap) don't need to be rewritten —
+ * we adapt at the boundary instead.
+ *
+ * Notes:
+ * - `id` (UUID) is exposed so per-product forms can submit a real FK.
+ * - `category` is the slug used in URLs (`/products?category=gloves`),
+ *   matching the legacy `category` field. The DB column is `category_slug`.
+ * - `sizes` is joined back to a comma-separated string for card display.
+ */
 export interface Product {
+  id: string;
   slug: string;
   title: string;
   category: string;
@@ -19,40 +36,97 @@ export interface Product {
   bulkSupply: string;
 }
 
-const products = productsData as Product[];
+type DbProduct = typeof productsTable.$inferSelect;
 
-export function getAllProducts(): Product[] {
-  return products;
+function fromDb(row: DbProduct): Product {
+  const badge = (row.badge as ProductBadge | null) ?? undefined;
+  return {
+    id: row.id,
+    slug: row.slug,
+    title: row.title,
+    category: row.categorySlug,
+    categoryLabel: row.categoryLabel,
+    sizes: row.sizes.join(", "),
+    badge,
+    description: row.description,
+    sku: row.sku,
+    material: row.material,
+    usageArea: row.usageArea,
+    bulkSupply: row.bulkSupply,
+  };
 }
 
-export function getProductBySlug(slug: string): Product | undefined {
-  return products.find((p) => p.slug === slug);
+export async function getAllProducts(): Promise<Product[]> {
+  const rows = await db
+    .select()
+    .from(productsTable)
+    .orderBy(asc(productsTable.sortOrder), asc(productsTable.title));
+  return rows.map(fromDb);
 }
 
-export function getProductsByCategory(category: string): Product[] {
-  if (category === "all") return products;
-  return products.filter((p) => p.category === category);
+export async function getProductBySlug(slug: string): Promise<Product | undefined> {
+  const [row] = await db
+    .select()
+    .from(productsTable)
+    .where(eq(productsTable.slug, slug))
+    .limit(1);
+  return row ? fromDb(row) : undefined;
 }
 
-export function getRelatedProducts(
+export async function getProductsByCategory(category: string): Promise<Product[]> {
+  if (category === "all") return getAllProducts();
+  const rows = await db
+    .select()
+    .from(productsTable)
+    .where(eq(productsTable.categorySlug, category))
+    .orderBy(asc(productsTable.sortOrder), asc(productsTable.title));
+  return rows.map(fromDb);
+}
+
+export async function getRelatedProducts(
   current: Product,
   limit = 4,
-): Product[] {
-  return products
-    .filter((p) => p.category === current.category && p.slug !== current.slug)
-    .slice(0, limit);
+): Promise<Product[]> {
+  const rows = await db
+    .select()
+    .from(productsTable)
+    .where(
+      and(
+        eq(productsTable.categorySlug, current.category),
+        ne(productsTable.slug, current.slug),
+      ),
+    )
+    .orderBy(asc(productsTable.sortOrder), asc(productsTable.title))
+    .limit(limit);
+  return rows.map(fromDb);
 }
 
-export function getFeaturedProducts(limit = 4): Product[] {
-  return products.filter((p) => p.badge).slice(0, limit);
+export async function getFeaturedProducts(limit = 4): Promise<Product[]> {
+  const rows = await db
+    .select()
+    .from(productsTable)
+    .where(eq(productsTable.featured, true))
+    .orderBy(asc(productsTable.sortOrder), asc(productsTable.title))
+    .limit(limit);
+  return rows.map(fromDb);
 }
 
-export function getBestsellers(limit = 4): Product[] {
-  return products
-    .filter((p) => p.badge?.color === "bestseller")
-    .slice(0, limit);
+export async function getBestsellers(limit = 4): Promise<Product[]> {
+  const rows = await db
+    .select()
+    .from(productsTable)
+    .where(eq(productsTable.bestseller, true))
+    .orderBy(desc(productsTable.sortOrder))
+    .limit(limit);
+  return rows.map(fromDb);
 }
 
-export function getProtectiveGowns(limit = 4): Product[] {
-  return products.filter((p) => p.category === "protective-gown").slice(0, limit);
+export async function getProtectiveGowns(limit = 4): Promise<Product[]> {
+  const rows = await db
+    .select()
+    .from(productsTable)
+    .where(eq(productsTable.isProtectiveGown, true))
+    .orderBy(asc(productsTable.sortOrder), asc(productsTable.title))
+    .limit(limit);
+  return rows.map(fromDb);
 }

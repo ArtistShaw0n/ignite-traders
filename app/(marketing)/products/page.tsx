@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     "Industrial supplies, PPE, and clean-room essentials — sourced and stocked for fast dispatch. Bulk pricing available on all products.",
 };
 
-export default function ProductsPage() {
-  const products = getAllProducts();
+export default async function ProductsPage() {
+  const products = await getAllProducts();
   return <ProductsBrowser products={products} />;
 }
