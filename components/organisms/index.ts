@@ -16,6 +16,9 @@ export type { CategoryFilterSectionProps } from "./CategoryFilterSection";
 export { ContactCard } from "./ContactCard";
 export type { ContactCardProps } from "./ContactCard";
 
+export { ContactForm } from "./ContactForm";
+export type { ContactFormProps } from "./ContactForm";
+
 export { FaqSection } from "./FaqSection";
 export type { FaqSectionProps, FaqItem } from "./FaqSection";
 
