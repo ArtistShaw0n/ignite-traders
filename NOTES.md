@@ -1,32 +1,59 @@
-# Session Notes — 2026-05-21 (codespaces)
+# Session Notes — 2026-06-03 (office)
 
 ## ✅ Completed today
 
-- **Removed WhatsApp CTA from hero banner** (commit `6f15e80`, deployed):
-  - Stripped `whatsappCta` prop from [components/organisms/HeroBanner.tsx](components/organisms/HeroBanner.tsx) — interface, destructure, JSX all cleaned up.
-  - Removed `whatsappCta` argument from `<HeroBanner>` call in [app/(marketing)/page.tsx](<app/(marketing)/page.tsx>).
-  - `WhatsAppCTA` component itself untouched — still used by `ProductInfoCard`, `ContactCard`, `RequestQuoteCTA`, `design-system` page, and Header WhatsApp button.
-- **Added theme (dark/light) toggle to site header** (this commit):
-  - Wired existing [components/atoms/ThemeToggle.tsx](components/atoms/ThemeToggle.tsx) into [components/organisms/Header.tsx](components/organisms/Header.tsx) between CallUsBlock and WhatsApp button — visible at all breakpoints.
-  - Fixed `ThemeToggle` initial-paint bug: previously rendered an empty bordered button before hydration (no icon visible). Now renders both Moon and Sun icons with CSS `hidden`/`block` toggle, so an icon always shows from first paint without causing a hydration mismatch.
-  - Toggle persists theme to `localStorage` and reads `prefers-color-scheme` on first visit.
+- **Re-added WhatsApp Chat CTA to home hero banner** (commit `39767c3`, deployed):
+  - Pulled latest from origin (was behind by 3 commits: FAQ anchor wire, WhatsApp removal, theme toggle).
+  - Reverted `6f15e80` (the "Remove WhatsApp CTA" commit from home session) to bring the third CTA back without disturbing the theme toggle or FAQ anchor work.
+  - Production now shows 3 hero CTAs: **Browse Products** → **Request Quote** → **WhatsApp Chat** (green, prefilled with "Hi! I'd like to know more about IGNITE products.").
+  - Verified live at https://ignite-traders.vercel.app — HTTP 200, all 3 labels in rendered HTML.
+
+- **Authored full backend architecture plan** ([BACKEND-PLAN.md](BACKEND-PLAN.md)):
+  - User asked for **Tier 4** scope: working forms → DB → admin dashboard → product CMS.
+  - 14-section document covers: tech stack, data model (3 tables in Drizzle), file structure, auth strategy (Clerk), email flows (Resend), storage (Vercel Blob), env vars, 10-phase rollout, cost estimate ($0/mo within free tiers), risks, non-goals.
+  - **Not implemented yet** — user opted "plan only" first.
+
+## 🧹 Housekeeping done this session
+
+- Killed zombie dev server (PID 94450) that was pointing at a deleted `.Trash/Website Design/recovery/1/ignite-website` directory and squatting port 3003.
+- Cleaned 22 Google Drive sync conflict files inside `.git/` (`FETCH_HEAD 2`, duplicate `objects/XX 2/` dirs, `refs/remotes/origin/main 2`). These were jamming `git fetch`.
+- Removed a `.claude 2/` Google Drive conflict directory in the project root.
+- Ran `npm install` (node_modules wasn't present on this machine — first time pulling deps in this clone).
+- Re-linked the local repo to the Vercel project (`.vercel/` was missing; `vercel link` was needed before `vercel ls` worked).
 
 ## 🚧 In progress (WIP)
 
-- None — both items above are commit-ready and being pushed in this session.
+- None — both deliverables (CTA re-add + backend plan) are committed/staged for push.
 
-## ❓ Open questions / blockers
+## ❓ Open questions / blockers (need owner's answers before Phase 1 implementation)
 
-- **Theme-init FOUC (low priority):** The `themeInitScript` in [app/layout.tsx](app/layout.tsx) is declared via `<Script id="theme-init" strategy="beforeInteractive">{...}</Script>` but Next.js 16 (App Router + Turbopack) actually injects it via `__next_s.push(...)` after hydration rather than inlining it in `<head>` pre-paint. Result: dark-theme users may briefly see light bg on first load before the script runs. Fix would be to render a raw `<script dangerouslySetInnerHTML={{__html: themeInitScript}} />` directly inside the `<head>` in the root layout. Not blocking — toggle works correctly post-hydration.
+All from [BACKEND-PLAN.md §10](BACKEND-PLAN.md):
+
+1. **Sender domain** for transactional email — `no-reply@ignitetradesbd.com` ok? (Requires DNS verification on Resend.)
+2. **First admin email** for Clerk role assignment — default `shawon221b@gmail.com`?
+3. **Spam strategy** — honeypot only, or also Vercel BotID / reCAPTCHA?
+4. **Inquiry retention** — keep forever vs auto-archive after N months?
+5. **Multi-admin** — anyone with Clerk `admin` role can manage, ok?
+6. **Bangla email templates** — v1 English-only or both?
 
 ## ▶️ Next steps
 
-- **Theme-init inline fix** — as above, swap the `<Script>` for a raw `<script dangerouslySetInnerHTML>` in `<head>` to eliminate the FOUC for users with persisted dark theme.
-- **Carry-overs from yesterday's session:**
-  - Add `faqJsonLd()` helper to [lib/jsonld.ts](lib/jsonld.ts) and inject FAQPage schema on the homepage for SEO.
-  - Consider localising FAQ copy for Bangla audience (or providing a `/bn` route group).
-  - Audit other organism sections for missing `id`/`scroll-mt-24` so footer/header anchor links land cleanly.
-- **Theme-aware audit:** A few molecules/organisms (`HeroBanner`, `Footer`, `BulkOfferBanner`, `CountdownTimer`, `BulkQuoteCTA`) use hardcoded `bg-ink-900`/`text-white`. Today's quick audit confirmed these are all in intentionally-dark sections — but worth a deliberate pass in case dark-mode polish reveals contrast issues.
+1. **Owner reviews [BACKEND-PLAN.md](BACKEND-PLAN.md)** — confirm scope, stack picks, phase order, and answer the 6 questions above. If stack changes desired (e.g. Prisma over Drizzle, NextAuth over Clerk), discuss before Phase 1.
+2. **Phase 1 — DB foundation** (next coding session):
+   - Provision Neon Postgres via Vercel Marketplace.
+   - Write Drizzle schema for `inquiries`, `products`, `emailLog`.
+   - Add `db:generate` / `db:migrate` / `db:seed` scripts.
+   - No UI changes in this phase — pure backend foundation.
+3. **Carry-overs from prior home session** (still valid, not done today):
+   - Theme-init FOUC fix: swap `<Script id="theme-init" strategy="beforeInteractive">` for a raw `<script dangerouslySetInnerHTML>` inside `<head>` in `app/layout.tsx`.
+   - `faqJsonLd()` helper in `lib/jsonld.ts` + inject FAQPage schema on homepage for SEO.
+   - Bangla copy variant for FAQ (or `/bn` route group).
+   - Audit organism `id`/`scroll-mt-24` for anchor-link landing.
+
+## ⚠️ Multi-device note for whoever picks this up
+
+- This repo lives in **Google Drive** (`~/Library/CloudStorage/GoogleDrive-…`) — Drive's real-time sync occasionally writes `* 2` conflict files into `.git/`, which jams `git fetch`. If `git fetch` hangs: `find .git -name "* 2" -delete` + `find .git -name "* 2" -type d -exec rm -rf {} +`, then retry.
+- Always run `git pull origin main` and `npm install` **before** starting work — this session lost time because the local was behind by 3 commits.
 
 ---
 
