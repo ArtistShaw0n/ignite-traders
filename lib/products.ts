@@ -130,3 +130,27 @@ export async function getProtectiveGowns(limit = 4): Promise<Product[]> {
     .limit(limit);
   return rows.map(fromDb);
 }
+
+// ---- Admin (raw rows, full fields incl. images/flags) ----
+
+export type ProductRow = DbProduct;
+
+/** Full rows for the admin product list — every field, including flags. */
+export async function getAllProductRows(): Promise<ProductRow[]> {
+  return db
+    .select()
+    .from(productsTable)
+    .orderBy(asc(productsTable.sortOrder), asc(productsTable.title));
+}
+
+/** A single full row by id — backs the admin edit form. */
+export async function getProductRowById(
+  id: string,
+): Promise<ProductRow | null> {
+  const [row] = await db
+    .select()
+    .from(productsTable)
+    .where(eq(productsTable.id, id))
+    .limit(1);
+  return row ?? null;
+}
