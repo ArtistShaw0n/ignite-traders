@@ -32,7 +32,13 @@ const clerkConfigured =
 export default clerkConfigured
   ? clerkMiddleware(async (auth, req) => {
       if (isProtectedAdminRoute(req)) {
-        await auth.protect();
+        // Without unauthenticatedUrl, Clerk v7's auth.protect() throws a
+        // notFound (404) for signed-out users — the middleware can't see
+        // the signInUrl set on <ClerkProvider>. Point it explicitly at our
+        // custom sign-in page so signed-out visitors get redirected there.
+        await auth.protect({
+          unauthenticatedUrl: new URL("/admin/sign-in", req.url).toString(),
+        });
       }
     })
   : function passthroughMiddleware() {
