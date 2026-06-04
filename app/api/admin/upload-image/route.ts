@@ -45,17 +45,8 @@ export async function POST(request: Request) {
     return Response.json({ url: blob.url });
   } catch (err) {
     console.error("[upload-image] put failed", err);
-    // TEMP diagnostic: surface the real error so we can see why put() fails
-    // (credentials vs. store access vs. something else). Revert to a generic
-    // message once the upload path is confirmed working.
-    const detail =
-      err instanceof Error ? `${err.name}: ${err.message}` : String(err);
-    const hasToken = !!process.env.BLOB_READ_WRITE_TOKEN;
-    const hasStoreId = !!process.env.BLOB_STORE_ID;
     return Response.json(
-      {
-        error: `Upload failed — ${detail} (token:${hasToken} storeId:${hasStoreId})`,
-      },
+      { error: "Upload failed. Please try again, or check the file and retry." },
       { status: 500 },
     );
   }
