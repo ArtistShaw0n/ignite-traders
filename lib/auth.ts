@@ -10,9 +10,13 @@ import { currentUser } from "@clerk/nextjs/server";
  * and then a hardcoded default so dev environments aren't completely
  * locked out.
  */
+// NOTE: `||` not `??` — an env var set to an empty string ("") is a real
+// (and easy-to-hit) misconfiguration. `??` only falls through on
+// null/undefined, so `ADMIN_EMAIL=""` would yield an EMPTY allowlist and
+// lock everyone out. `||` treats "" as absent and falls back correctly.
 const ADMIN_EMAILS = (
-  process.env.ADMIN_EMAILS ??
-  process.env.ADMIN_EMAIL ??
+  process.env.ADMIN_EMAILS ||
+  process.env.ADMIN_EMAIL ||
   "shawon221b@gmail.com"
 )
   .split(",")

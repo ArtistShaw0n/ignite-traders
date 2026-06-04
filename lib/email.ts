@@ -28,18 +28,21 @@ function getResend(): Resend | null {
   return cachedClient;
 }
 
+// `||` not `??` throughout — env vars set to an empty string ("") should
+// fall back to the default, but `??` only catches null/undefined. We hit
+// exactly this with ADMIN_EMAIL="" silently routing admin mail to nowhere.
 function getFrom(): string {
   return (
-    process.env.RESEND_FROM_EMAIL ?? `${SITE_LEGAL_NAME} <no-reply@ignitetradesbd.com>`
+    process.env.RESEND_FROM_EMAIL || `${SITE_LEGAL_NAME} <no-reply@ignitetradesbd.com>`
   );
 }
 
 function getAdminEmail(): string {
-  return process.env.ADMIN_EMAIL ?? "shawon221b@gmail.com";
+  return process.env.ADMIN_EMAIL || "shawon221b@gmail.com";
 }
 
 function getSiteUrl(): string {
-  return process.env.NEXT_PUBLIC_SITE_URL ?? "https://ignitetradesbd.com";
+  return process.env.NEXT_PUBLIC_SITE_URL || "https://ignitetradesbd.com";
 }
 
 async function logSend(entry: NewEmailLog): Promise<void> {
