@@ -1,59 +1,85 @@
-# Session Notes — 2026-06-03 (office)
+# Session Notes — 2026-06-05 (office)
+
+> **Milestone: full backend complete (Tier 4).** Tagged `v0.5.0`.
+> Live: https://ignite-traders.vercel.app
 
 ## ✅ Completed today
 
-- **Re-added WhatsApp Chat CTA to home hero banner** (commit `39767c3`, deployed):
-  - Pulled latest from origin (was behind by 3 commits: FAQ anchor wire, WhatsApp removal, theme toggle).
-  - Reverted `6f15e80` (the "Remove WhatsApp CTA" commit from home session) to bring the third CTA back without disturbing the theme toggle or FAQ anchor work.
-  - Production now shows 3 hero CTAs: **Browse Products** → **Request Quote** → **WhatsApp Chat** (green, prefilled with "Hi! I'd like to know more about IGNITE products.").
-  - Verified live at https://ignite-traders.vercel.app — HTTP 200, all 3 labels in rendered HTML.
+Implemented **all of BACKEND-PLAN.md Phases 4–10** (Phases 1–3 — DB schema,
+working contact form → DB, Resend emails — were done in the prior session).
 
-- **Authored full backend architecture plan** ([BACKEND-PLAN.md](BACKEND-PLAN.md)):
-  - User asked for **Tier 4** scope: working forms → DB → admin dashboard → product CMS.
-  - 14-section document covers: tech stack, data model (3 tables in Drizzle), file structure, auth strategy (Clerk), email flows (Resend), storage (Vercel Blob), env vars, 10-phase rollout, cost estimate ($0/mo within free tiers), risks, non-goals.
-  - **Not implemented yet** — user opted "plan only" first.
+- **Phase 7 — Products → Postgres.** Added `sku/material/usage_area/bulk_supply`
+  columns, `badge` → jsonb, `description` NOT NULL (migration `0001`, applied via
+  direct SQL because drizzle-kit migrate hangs on Neon's serverless websocket;
+  recorded in `drizzle.__drizzle_migrations`). New `db/seed.ts` (`npm run db:seed`)
+  upserts the 12 products by slug. `lib/products.ts` is now async + DB-backed; all
+  consumers (`sitemap`, home, `/products`, detail) await it.
+- **Phase 4 — Per-product quote form.** Detail page renders `ContactForm` with
+  `source="product-page"`, `productId={product.id}` (real UUID), `showQuantity`.
+- **Phase 5 — Clerk admin auth.** `middleware.ts` gates `/admin/*` (passes through
+  if Clerk keys absent, so local dev never breaks); `lib/auth.ts` `requireAdmin()` +
+  `getAdminUser()`; `/admin` shell + `/admin/sign-in`. Clerk via Vercel Marketplace.
+- **Phase 6 — Inquiries dashboard.** `/admin/inquiries` (list + status-filter pills
+  w/ counts), `/admin/inquiries/[id]` (detail + optimistic status update + email log),
+  `/admin/inquiries/export` (admin-gated CSV). Landing shows status cards + recent.
+- **Phase 8 — Product CMS.** `/admin/products` CRUD (create/edit/delete + flags),
+  shared `ProductForm`. **Image upload** via `/api/admin/upload-image` → Vercel Blob
+  `put({access:'public'})`; `ImageUploader`; images wired into cards + detail gallery.
+  `next.config` allows `*.public.blob.vercel-storage.com`.
+- **Phase 9 — Resend webhook.** `/api/webhooks/resend` (svix-verified) updates
+  `email_log.status` by `resend_id`. **Code live but NOT activated** (see blockers).
+- **Phase 10 — Analytics + lead source.** `@vercel/analytics` in root layout;
+  lead-source breakdown (bars + %) on the admin dashboard.
 
-## 🧹 Housekeeping done this session
-
-- Killed zombie dev server (PID 94450) that was pointing at a deleted `.Trash/Website Design/recovery/1/ignite-website` directory and squatting port 3003.
-- Cleaned 22 Google Drive sync conflict files inside `.git/` (`FETCH_HEAD 2`, duplicate `objects/XX 2/` dirs, `refs/remotes/origin/main 2`). These were jamming `git fetch`.
-- Removed a `.claude 2/` Google Drive conflict directory in the project root.
-- Ran `npm install` (node_modules wasn't present on this machine — first time pulling deps in this clone).
-- Re-linked the local repo to the Vercel project (`.vercel/` was missing; `vercel link` was needed before `vercel ls` worked).
+### Bugs caught & fixed this session
+- **Empty-string env locked admins out:** `ADMIN_EMAIL=""` + `??` (only catches
+  null/undefined) → empty allowlist → everyone redirected. Switched `??` → `||` in
+  `lib/auth.ts` + `lib/email.ts` (also fixed admin emails silently going to "").
+  Set `ADMIN_EMAILS=shawon221b@gmail.com,uiux1.opl@gmail.com` on Vercel.
+- **`/admin` 404 for signed-out users:** Clerk v7 `auth.protect()` throws notFound
+  unless given `unauthenticatedUrl` → added it (redirects to `/admin/sign-in`).
+- **Blob "private store" rejected public images:** the first store was created
+  **private** → `put({access:'public'})` failed. Recreated as **public** via CLI
+  (`vercel blob create-store … --access public`), deleted the private one.
 
 ## 🚧 In progress (WIP)
+- None — all 10 phases are code-complete, deployed, and verified.
 
-- None — both deliverables (CTA re-add + backend plan) are committed/staged for push.
+## ❓ Open questions / blockers
+- **Phase 9 webhook not activated.** Needs (a) a webhook at https://resend.com/webhooks
+  → `https://ignite-traders.vercel.app/api/webhooks/resend` for events
+  `email.sent/delivered/bounced/complained`, and (b) its signing secret as
+  `RESEND_WEBHOOK_SECRET` in Vercel (Production+Preview) + redeploy. Until then the
+  route returns 500 "not configured" (harmless; sending still works).
+- **Resend domain not verified.** Sender unverified / sandbox — can only deliver to
+  the verified Resend account inbox. Verify `ignitetradesbd.com` for production email.
+- **Clerk on dev keys.** Fine for `*.vercel.app`; switch to production keys when the
+  real domain goes live.
+- **Hobby env note:** Clerk + Blob creds live in Production+Preview only (Development
+  is locked on Hobby) — local `npm run dev` won't have them; `/admin` won't work
+  locally unless you pull them into `.env.local`.
 
-## ❓ Open questions / blockers (need owner's answers before Phase 1 implementation)
+## ▶️ Next steps (priority order)
+1. (Optional) Activate the Phase 9 Resend webhook (see blockers).
+2. Upload real product photos via `/admin/products` (catalog shows the silhouette
+   placeholder until then).
+3. (Optional) Verify `ignitetradesbd.com` on Resend → production email.
+4. At real-domain launch: Clerk production keys + set `NEXT_PUBLIC_SITE_URL`.
+5. Future polish: inquiries-list pagination at volume; product image reordering;
+   Bangla email templates (currently English-only).
 
-All from [BACKEND-PLAN.md §10](BACKEND-PLAN.md):
-
-1. **Sender domain** for transactional email — `no-reply@ignitetradesbd.com` ok? (Requires DNS verification on Resend.)
-2. **First admin email** for Clerk role assignment — default `shawon221b@gmail.com`?
-3. **Spam strategy** — honeypot only, or also Vercel BotID / reCAPTCHA?
-4. **Inquiry retention** — keep forever vs auto-archive after N months?
-5. **Multi-admin** — anyone with Clerk `admin` role can manage, ok?
-6. **Bangla email templates** — v1 English-only or both?
-
-## ▶️ Next steps
-
-1. **Owner reviews [BACKEND-PLAN.md](BACKEND-PLAN.md)** — confirm scope, stack picks, phase order, and answer the 6 questions above. If stack changes desired (e.g. Prisma over Drizzle, NextAuth over Clerk), discuss before Phase 1.
-2. **Phase 1 — DB foundation** (next coding session):
-   - Provision Neon Postgres via Vercel Marketplace.
-   - Write Drizzle schema for `inquiries`, `products`, `emailLog`.
-   - Add `db:generate` / `db:migrate` / `db:seed` scripts.
-   - No UI changes in this phase — pure backend foundation.
-3. **Carry-overs from prior home session** (still valid, not done today):
-   - Theme-init FOUC fix: swap `<Script id="theme-init" strategy="beforeInteractive">` for a raw `<script dangerouslySetInnerHTML>` inside `<head>` in `app/layout.tsx`.
-   - `faqJsonLd()` helper in `lib/jsonld.ts` + inject FAQPage schema on homepage for SEO.
-   - Bangla copy variant for FAQ (or `/bn` route group).
-   - Audit organism `id`/`scroll-mt-24` for anchor-link landing.
+## 🔑 Key facts for the other machine
+- Admin: sign in at `/admin` with `shawon221b@gmail.com` (or `uiux1.opl@gmail.com`).
+- `npm run db:seed` reseeds products; `npm run db:peek` inspects inquiries/email log.
+- Vercel Blob store: `ignite-product-images` (public, `store_pL3yzXHMZwXRTVdf`).
+- Never paste API keys/tokens in chat; never commit `.env.local`.
 
 ## ⚠️ Multi-device note for whoever picks this up
-
-- This repo lives in **Google Drive** (`~/Library/CloudStorage/GoogleDrive-…`) — Drive's real-time sync occasionally writes `* 2` conflict files into `.git/`, which jams `git fetch`. If `git fetch` hangs: `find .git -name "* 2" -delete` + `find .git -name "* 2" -type d -exec rm -rf {} +`, then retry.
-- Always run `git pull origin main` and `npm install` **before** starting work — this session lost time because the local was behind by 3 commits.
+- This repo lives in **Google Drive** — Drive's sync occasionally writes `* 2`
+  conflict files into `.git/`, jamming `git fetch`. If it hangs:
+  `find .git -name "* 2" -delete` + `find .git -name "* 2" -type d -exec rm -rf {} +`,
+  then retry.
+- Always `git pull origin main` and `npm install` **before** starting work.
 
 ---
 
