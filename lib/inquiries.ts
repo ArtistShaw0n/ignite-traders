@@ -87,6 +87,22 @@ export async function getInquiryStatusCounts(): Promise<
   return counts;
 }
 
+/** Inquiry counts grouped by lead source — drives the Phase 10 breakdown. */
+export async function getInquirySourceCounts(): Promise<
+  { source: string; count: number }[]
+> {
+  const rows = await db
+    .select({
+      source: inquiries.source,
+      count: sql<number>`count(*)::int`,
+    })
+    .from(inquiries)
+    .groupBy(inquiries.source)
+    .orderBy(desc(sql`count(*)`));
+
+  return rows.map((r) => ({ source: r.source ?? "unknown", count: r.count }));
+}
+
 export async function getEmailLogForInquiry(
   inquiryId: string,
 ): Promise<EmailLog[]> {

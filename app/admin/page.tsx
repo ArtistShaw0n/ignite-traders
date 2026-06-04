@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/auth";
-import { getInquiryStatusCounts, getRecentInquiries } from "@/lib/inquiries";
+import {
+  getInquiryStatusCounts,
+  getRecentInquiries,
+  getInquirySourceCounts,
+} from "@/lib/inquiries";
 import {
   INQUIRY_STATUSES,
   INQUIRY_STATUS_LABELS,
@@ -17,10 +21,13 @@ export const metadata = {
 export default async function AdminHomePage() {
   const { email } = await requireAdmin();
 
-  const [counts, recent] = await Promise.all([
+  const [counts, recent, sources] = await Promise.all([
     getInquiryStatusCounts(),
     getRecentInquiries(6),
+    getInquirySourceCounts(),
   ]);
+
+  const sourceTotal = sources.reduce((sum, s) => sum + s.count, 0);
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -92,18 +99,54 @@ export default async function AdminHomePage() {
         </div>
       </div>
 
-      {/* Coming next */}
-      <div className="mt-10 rounded-xl border border-[var(--border-default)] bg-white p-6">
-        <h2 className="text-h4 font-semibold">Coming next</h2>
-        <ul className="mt-3 list-disc space-y-1 pl-5 text-body-sm text-[var(--fg-muted)]">
-          <li>Phase 8 — Product CMS: edit titles, swap images, toggle featured / bestseller.</li>
-          <li>Phase 9 — Live email delivery status (Resend webhook).</li>
-          <li>Phase 10 — Analytics &amp; lead-source breakdown.</li>
-        </ul>
+      {/* Lead sources */}
+      <div className="mt-10">
+        <h2 className="text-h4 font-semibold">Lead sources</h2>
+        <div className="mt-4 rounded-xl border border-[var(--border-default)] bg-white p-6">
+          {sources.length === 0 ? (
+            <p className="text-body-sm text-[var(--fg-muted)]">
+              No inquiries yet — sources will appear here.
+            </p>
+          ) : (
+            <ul className="space-y-3">
+              {sources.map((s) => {
+                const pct = sourceTotal
+                  ? Math.round((s.count / sourceTotal) * 100)
+                  : 0;
+                return (
+                  <li key={s.source}>
+                    <div className="flex items-center justify-between text-body-sm">
+                      <span className="font-medium">
+                        {SOURCE_LABELS[s.source] ?? s.source}
+                      </span>
+                      <span className="text-[var(--fg-muted)]">
+                        {s.count} ({pct}%)
+                      </span>
+                    </div>
+                    <div className="mt-1 h-2 overflow-hidden rounded-full bg-[var(--bg-surface-muted)]">
+                      <div
+                        className="h-full rounded-full bg-brand-500"
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
       </div>
     </div>
   );
 }
+
+const SOURCE_LABELS: Record<string, string> = {
+  "home-hero": "Home hero",
+  "contact-page": "Contact page",
+  "product-page": "Product page",
+  "whatsapp-fallback": "WhatsApp fallback",
+  unknown: "Unknown",
+};
 
 function StatCard({
   label,
