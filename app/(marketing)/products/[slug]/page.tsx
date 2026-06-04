@@ -45,6 +45,8 @@ function toCard(p: Product): ProductCardProps {
     sizes: p.sizes,
     href: `/products/${p.slug}`,
     badge: p.badge,
+    image: p.image,
+    imageAlt: p.title,
   };
 }
 
@@ -88,6 +90,10 @@ export default async function ProductDetailPage({ params }: PageProps) {
         description={product.description}
         phone={SITE_PHONE}
         whatsapp={SITE_WHATSAPP}
+        images={product.images.map((im) => ({
+          src: im.url,
+          alt: im.alt ?? product.title,
+        }))}
         specs={[
           { label: "SKU", value: product.sku },
           { label: "Material", value: product.material },

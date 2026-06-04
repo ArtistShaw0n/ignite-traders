@@ -99,6 +99,8 @@ export function ProductsBrowser({ products }: { products: Product[] }) {
                 sizes={p.sizes}
                 badge={p.badge}
                 href={`/products/${p.slug}`}
+                image={p.image}
+                imageAlt={p.title}
               />
             ))}
           </div>

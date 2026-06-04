@@ -10,6 +10,7 @@ import {
   type ProductImage,
 } from "@/lib/validation/product";
 import type { ProductActionResult } from "@/app/actions/admin-products";
+import { ImageUploader } from "@/app/admin/_components/ImageUploader";
 
 export interface ProductFormInitial {
   slug?: string;
@@ -46,9 +47,9 @@ export function ProductForm({
   const [state, formAction, pending] = useActionState(action, null);
   const fe: FieldErrors = state && !state.ok ? state.fieldErrors : undefined;
 
-  // Images held in state so the 8b uploader can push URLs here; for now it
-  // round-trips whatever the product already had.
-  const [images] = useState<ProductImage[]>(initial?.images ?? []);
+  // Images held in state — the uploader pushes Blob URLs here and they ride
+  // along in the hidden field on submit.
+  const [images, setImages] = useState<ProductImage[]>(initial?.images ?? []);
 
   return (
     <form action={formAction} className="space-y-6">
@@ -117,6 +118,8 @@ export function ProductForm({
         rows={3}
         error={fe?.description}
       />
+
+      <ImageUploader value={images} onChange={setImages} />
 
       <div className="grid gap-5 sm:grid-cols-2">
         <Text

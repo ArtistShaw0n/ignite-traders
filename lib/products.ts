@@ -21,6 +21,11 @@ export interface ProductBadge {
  *   matching the legacy `category` field. The DB column is `category_slug`.
  * - `sizes` is joined back to a comma-separated string for card display.
  */
+export interface ProductImageRef {
+  url: string;
+  alt?: string;
+}
+
 export interface Product {
   id: string;
   slug: string;
@@ -34,12 +39,21 @@ export interface Product {
   material: string;
   usageArea: string;
   bulkSupply: string;
+  /** First image URL — convenient for card thumbnails. */
+  image?: string;
+  /** All images, in order — used by the detail-page gallery. */
+  images: ProductImageRef[];
 }
 
 type DbProduct = typeof productsTable.$inferSelect;
 
 function fromDb(row: DbProduct): Product {
   const badge = (row.badge as ProductBadge | null) ?? undefined;
+  const images: ProductImageRef[] = Array.isArray(row.images)
+    ? (row.images as ProductImageRef[]).filter(
+        (i) => i && typeof i.url === "string",
+      )
+    : [];
   return {
     id: row.id,
     slug: row.slug,
@@ -53,6 +67,8 @@ function fromDb(row: DbProduct): Product {
     material: row.material,
     usageArea: row.usageArea,
     bulkSupply: row.bulkSupply,
+    image: images[0]?.url,
+    images,
   };
 }
 

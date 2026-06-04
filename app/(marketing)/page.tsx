@@ -37,6 +37,8 @@ function toCard(p: Product): ProductCardProps {
     sizes: p.sizes,
     href: `/products/${p.slug}`,
     badge: p.badge,
+    image: p.image,
+    imageAlt: p.title,
   };
 }
 
