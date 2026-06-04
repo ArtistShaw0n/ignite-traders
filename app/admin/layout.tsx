@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ClerkProvider, UserButton } from "@clerk/nextjs";
+import { AdminNav } from "@/app/admin/_components/AdminNav";
 
 /**
  * Admin route group layout — adds ClerkProvider so client hooks
@@ -23,12 +24,15 @@ export default function AdminLayout({
       <div className="min-h-screen bg-[var(--bg-surface-muted)] text-[var(--fg-primary)]">
         <header className="border-b border-[var(--border-default)] bg-white">
           <div className="container-site flex items-center justify-between py-3">
-            <Link
-              href="/admin"
-              className="text-body-sm font-bold tracking-tight"
-            >
-              IGNITE Admin
-            </Link>
+            <div className="flex items-center gap-6">
+              <Link
+                href="/admin"
+                className="text-body-sm font-bold tracking-tight"
+              >
+                IGNITE Admin
+              </Link>
+              <AdminNav />
+            </div>
             <div className="flex items-center gap-4">
               <Link
                 href="/"
