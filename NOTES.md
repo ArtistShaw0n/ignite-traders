@@ -74,11 +74,18 @@ working contact form → DB, Resend emails — were done in the prior session).
 - Vercel Blob store: `ignite-product-images` (public, `store_pL3yzXHMZwXRTVdf`).
 - Never paste API keys/tokens in chat; never commit `.env.local`.
 
-## ⚠️ Multi-device note for whoever picks this up
-- This repo lives in **Google Drive** — Drive's sync occasionally writes `* 2`
-  conflict files into `.git/`, jamming `git fetch`. If it hangs:
-  `find .git -name "* 2" -delete` + `find .git -name "* 2" -type d -exec rm -rf {} +`,
-  then retry.
+## ⚠️ Multi-device / cloud-sync note for whoever picks this up
+- **GitHub is the source of truth** — move code between machines only via
+  `git pull` / `git push`, never via cloud-folder sync. (Google Drive is no
+  longer used for this project.)
+- On this Mac the repo sits inside the **MEGA cloud-sync folder** (`~/MEGA/…`).
+  MEGA's sync can write `* 2` conflict files into `.git/`, jamming `git fetch`.
+  If git hangs:
+  `find .git -name "* 2*" -delete` + `find .git -name "* 2*" -type d -exec rm -rf {} +`,
+  then retry. (To avoid entirely: exclude this folder in MEGAsync settings, or
+  `git clone` into a non-synced folder — GitHub stays the backup either way.)
+- On any **other machine**, `git clone` fresh from GitHub into a normal folder —
+  do not reuse any leftover Google Drive copy.
 - Always `git pull origin main` and `npm install` **before** starting work.
 
 ---

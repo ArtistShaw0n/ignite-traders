@@ -26,6 +26,36 @@ This project is worked on from **two machines** in **sequential** mode (not simu
 Claude Code chat sessions are **local to each machine** — they do NOT sync via the Anthropic account.
 Continuity is achieved via files committed to Git: `NOTES.md`, `CLAUDE.md`, and commit messages.
 
+### 📍 Source of truth & where the repo lives
+
+- **GitHub (`origin/main`) is the single source of truth.** Move code between machines
+  **only** via Git (`git pull` / `git push`) — never by copying folders or relying on
+  cloud-folder sync. (Google Drive is no longer used for this project.)
+- On this Mac the working copy lives inside the **MEGA cloud-sync folder** (`~/MEGA/…`).
+  That's incidental — MEGA is **not** the sync mechanism between machines and must not be
+  relied on for it. On any other machine, `git clone` from GitHub into a normal
+  (non-synced) folder.
+- ⚠️ Because MEGA syncs this folder, it can occasionally drop `* 2` conflict files into
+  `.git/` and jam `git fetch` / `git pull`. If git hangs or errors oddly:
+  ```bash
+  find .git -name "* 2*" -delete
+  find .git -name "* 2*" -type d -exec rm -rf {} +
+  ```
+  then retry. (To avoid this entirely, exclude this folder in MEGAsync settings.)
+
+### 🚀 Always commit + push (standing rule — do NOT ask each time)
+
+The user has given **standing approval**: after completing any task that changes tracked
+files — and after the relevant checks pass (`npm run type-check`, `npm run lint`, and
+`npm run build` when applicable) — **commit with a descriptive message and
+`git push origin main` automatically, without asking.** Pushing `main` auto-deploys to
+Vercel, so "push to git" and "push to Vercel" are the same single action.
+
+- Stage **specific files** (never `git add .` / `-A`) so `.env.local` and build junk
+  can't slip in.
+- Group unrelated changes into separate, well-described commits.
+- Only skip the push for genuinely incomplete or broken WIP — and say so explicitly.
+
 ### 🟢 At the START of every session (any machine)
 
 Run these first, in this order:
