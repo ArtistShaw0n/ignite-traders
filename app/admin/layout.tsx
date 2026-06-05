@@ -1,20 +1,30 @@
 import Link from "next/link";
 import { ClerkProvider, UserButton } from "@clerk/nextjs";
 import { AdminNav } from "@/app/admin/_components/AdminNav";
+import { getAdminUser } from "@/lib/auth";
+import { getInquiryStatusCounts } from "@/lib/inquiries";
 
 /**
- * Admin route group layout — adds ClerkProvider so client hooks
- * (UserButton, useUser) work in this subtree only. The marketing site
- * stays free of Clerk JS to keep that bundle lean.
+ * Admin layout — adds ClerkProvider so client hooks (UserButton, useUser)
+ * work in this subtree only, keeping Clerk JS out of the marketing bundle.
  *
- * Phase 6 will extend this with a sidebar (Inquiries / Products / etc.)
- * once those routes exist. For now it's a thin top bar.
+ * Also fetches the count of `new` inquiries (only for a signed-in admin) so
+ * the nav can show a notification badge. Cheap COUNT query; runs per admin
+ * page load, and the status-update action revalidates these paths so the
+ * badge stays current.
  */
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const admin = await getAdminUser();
+  let newCount = 0;
+  if (admin) {
+    const counts = await getInquiryStatusCounts();
+    newCount = counts.new;
+  }
+
   return (
     <ClerkProvider
       signInUrl="/admin/sign-in"
@@ -31,7 +41,7 @@ export default function AdminLayout({
               >
                 IGNITE Admin
               </Link>
-              <AdminNav />
+              <AdminNav newCount={newCount} />
             </div>
             <div className="flex items-center gap-4">
               <Link
