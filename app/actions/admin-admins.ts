@@ -1,7 +1,7 @@
 "use server";
 
 import bcrypt from "bcryptjs";
-import { eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db/client";
 import { adminUsers } from "@/db/schema";
@@ -61,12 +61,16 @@ export async function removeAdmin(id: string): Promise<{ ok: boolean; error?: st
       return { ok: false, error: "You can't remove your own admin access." };
     }
 
-    const [{ count }] = await db.select({ count: sql<number>`count(*)::int` }).from(adminUsers);
-    if (count <= 1) {
+    // Atomic last-admin guard: delete only when more than one admin exists,
+    // so concurrent removals can't drain the table to zero.
+    const deleted = await db
+      .delete(adminUsers)
+      .where(and(eq(adminUsers.id, id), sql`(select count(*) from admin_users) > 1`))
+      .returning({ id: adminUsers.id });
+    if (deleted.length === 0) {
       return { ok: false, error: "Can't remove the last admin." };
     }
 
-    await db.delete(adminUsers).where(eq(adminUsers.id, id));
     revalidatePath("/admin/admins");
     return { ok: true };
   } catch (err) {

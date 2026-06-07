@@ -152,9 +152,9 @@ export const emailLog = pgTable("email_log", {
 });
 
 /**
- * Admin users — extra admins added through the admin UI. Permanent superadmins
- * come from the ADMIN_EMAILS env var (see lib/admins.ts); this table holds the
- * additional ones so access can be managed without a redeploy.
+ * Admin users — the entire admin allowlist. Each row is one admin login
+ * (email + bcrypt password_hash); only emails present here can sign in.
+ * Managed from /admin/admins; first admin via db/create-admin-user.ts.
  */
 export const adminUsers = pgTable("admin_users", {
   id: uuid("id")

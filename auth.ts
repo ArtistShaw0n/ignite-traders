@@ -6,6 +6,10 @@ import { db } from "@/db/client";
 import { adminUsers } from "@/db/schema";
 import { authConfig } from "./auth.config";
 
+// Fixed bcrypt hash (cost 10) compared against on the "no such admin" path so
+// login timing doesn't reveal which emails are registered admins.
+const DUMMY_HASH = "$2b$10$eGDsGpy4.ZLvl7EW7sORk.5oZupAQvt0fkrJhmaMqY/vWbuyFJyue";
+
 /**
  * Self-contained admin auth. A login succeeds only if the email exists in the
  * admin_users table AND the bcrypt password matches — the table IS the
@@ -31,7 +35,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           .from(adminUsers)
           .where(eq(adminUsers.email, email))
           .limit(1);
-        if (!row?.passwordHash) return null;
+        if (!row?.passwordHash) {
+          // Equalize timing with the success path (avoid user enumeration).
+          await bcrypt.compare(password, DUMMY_HASH);
+          return null;
+        }
 
         const ok = await bcrypt.compare(password, row.passwordHash);
         if (!ok) return null;
