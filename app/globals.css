@@ -65,8 +65,9 @@
   --color-neutral-900: #212529;
 
   /* ---------- Typography ---------- */
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
-    BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-sans:
+    var(--font-inter), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
   --font-display: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
   --text-xs: 0.75rem;
@@ -90,8 +91,7 @@
 
   /* ---------- Shadows ---------- */
   --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.04);
-  --shadow-card-hover: 0 10px 25px -5px rgb(0 0 0 / 0.08),
-    0 8px 10px -6px rgb(0 0 0 / 0.05);
+  --shadow-card-hover: 0 10px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.05);
   --shadow-button: 0 1px 2px 0 rgb(239 107 42 / 0.15);
 
   --container-max: 1280px;
@@ -103,17 +103,17 @@
    ============================================ */
 
 :root {
-  --bg-page: var(--color-neutral-0);          /* page background */
-  --bg-surface: var(--color-neutral-0);       /* cards, panels */
-  --bg-surface-muted: var(--color-neutral-50);/* alt sections */
-  --bg-surface-strong: var(--color-ink-900);  /* hero/footer dark */
+  --bg-page: var(--color-neutral-0); /* page background */
+  --bg-surface: var(--color-neutral-0); /* cards, panels */
+  --bg-surface-muted: var(--color-neutral-50); /* alt sections */
+  --bg-surface-strong: var(--color-ink-900); /* hero/footer dark */
   --bg-overlay: rgb(0 0 0 / 0.5);
 
   --fg-primary: var(--color-neutral-900);
   --fg-secondary: var(--color-neutral-700);
-  --fg-muted: var(--color-neutral-500);
-  --fg-on-strong: var(--color-neutral-0);     /* text on dark bg */
-  --fg-on-brand: var(--color-neutral-0);      /* text on orange */
+  --fg-muted: var(--color-neutral-600); /* AA-readable muted text */
+  --fg-on-strong: var(--color-neutral-0); /* text on dark bg */
+  --fg-on-brand: var(--color-neutral-0); /* text on orange */
 
   --border-default: var(--color-neutral-200);
   --border-strong: var(--color-neutral-300);
@@ -149,7 +149,9 @@ html {
   background: var(--bg-page);
   color: var(--fg-primary);
   scroll-behavior: smooth;
-  transition: background-color 200ms ease, color 200ms ease;
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
 }
 
 body {
@@ -193,6 +195,14 @@ body {
 .skip-link:focus-visible {
   transform: translateY(0);
   outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+/* Keyboard focus — a visible ring on interactive elements that don't define
+   their own focus-visible style. :where() keeps specificity 0 so per-component
+   focus styles (Button, inputs, etc.) always win over this fallback. */
+:where(a, button, [role="button"], summary, [tabindex]:not([tabindex="-1"])):focus-visible {
+  outline: 2px solid var(--ring-focus);
   outline-offset: 2px;
 }
 
@@ -240,67 +250,91 @@ body {
    ============================================ */
 
 .text-display {
-  font-size: 2.25rem;       /* 36px */
+  font-size: 2.25rem; /* 36px */
   line-height: 1.1;
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 .text-h1 {
-  font-size: 1.875rem;      /* 30px */
+  font-size: 1.875rem; /* 30px */
   line-height: 1.15;
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 .text-h2 {
-  font-size: 1.5rem;        /* 24px */
+  font-size: 1.5rem; /* 24px */
   line-height: 1.2;
   font-weight: 700;
   letter-spacing: -0.01em;
 }
 .text-h3 {
-  font-size: 1.25rem;       /* 20px */
+  font-size: 1.25rem; /* 20px */
   line-height: 1.3;
   font-weight: 600;
 }
 .text-h4 {
-  font-size: 1.125rem;      /* 18px */
+  font-size: 1.125rem; /* 18px */
   line-height: 1.35;
   font-weight: 600;
 }
 .text-body-lg {
-  font-size: 1.125rem;      /* 18px */
+  font-size: 1.125rem; /* 18px */
   line-height: 1.6;
 }
 .text-body {
-  font-size: 1rem;          /* 16px */
+  font-size: 1rem; /* 16px */
   line-height: 1.6;
 }
 .text-body-sm {
-  font-size: 0.875rem;      /* 14px */
+  font-size: 0.875rem; /* 14px */
   line-height: 1.5;
 }
 .text-caption {
-  font-size: 0.75rem;       /* 12px */
+  font-size: 0.75rem; /* 12px */
   line-height: 1.4;
   letter-spacing: 0.01em;
 }
 
 @media (min-width: 768px) {
-  .text-display { font-size: 3rem; }       /* 48px */
-  .text-h1 { font-size: 2.25rem; }         /* 36px */
-  .text-h2 { font-size: 1.875rem; }        /* 30px */
-  .text-h3 { font-size: 1.5rem; }          /* 24px */
-  .text-h4 { font-size: 1.25rem; }         /* 20px */
-  .text-body-lg { font-size: 1.125rem; }
+  .text-display {
+    font-size: 3rem;
+  } /* 48px */
+  .text-h1 {
+    font-size: 2.25rem;
+  } /* 36px */
+  .text-h2 {
+    font-size: 1.875rem;
+  } /* 30px */
+  .text-h3 {
+    font-size: 1.5rem;
+  } /* 24px */
+  .text-h4 {
+    font-size: 1.25rem;
+  } /* 20px */
+  .text-body-lg {
+    font-size: 1.125rem;
+  }
 }
 
 @media (min-width: 1024px) {
-  .text-display { font-size: 3.75rem; }    /* 60px */
-  .text-h1 { font-size: 3rem; }            /* 48px */
-  .text-h2 { font-size: 2.25rem; }         /* 36px */
-  .text-h3 { font-size: 1.75rem; }         /* 28px */
-  .text-h4 { font-size: 1.375rem; }        /* 22px */
-  .text-body-lg { font-size: 1.25rem; }    /* 20px */
+  .text-display {
+    font-size: 3.75rem;
+  } /* 60px */
+  .text-h1 {
+    font-size: 3rem;
+  } /* 48px */
+  .text-h2 {
+    font-size: 2.25rem;
+  } /* 36px */
+  .text-h3 {
+    font-size: 1.75rem;
+  } /* 28px */
+  .text-h4 {
+    font-size: 1.375rem;
+  } /* 22px */
+  .text-body-lg {
+    font-size: 1.25rem;
+  } /* 20px */
 }
 
 /* ============================================
@@ -310,28 +344,46 @@ body {
    ============================================ */
 
 .section-pad {
-  padding-top: 3rem;        /* 48px */
+  padding-top: 3rem; /* 48px */
   padding-bottom: 3rem;
 }
 .section-pad-sm {
-  padding-top: 2rem;        /* 32px */
+  padding-top: 2rem; /* 32px */
   padding-bottom: 2rem;
 }
 .section-pad-lg {
-  padding-top: 4rem;        /* 64px */
+  padding-top: 4rem; /* 64px */
   padding-bottom: 4rem;
 }
 
 @media (min-width: 768px) {
-  .section-pad { padding-top: 4rem; padding-bottom: 4rem; }
-  .section-pad-sm { padding-top: 3rem; padding-bottom: 3rem; }
-  .section-pad-lg { padding-top: 5rem; padding-bottom: 5rem; }
+  .section-pad {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+  .section-pad-sm {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+  .section-pad-lg {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
 }
 
 @media (min-width: 1024px) {
-  .section-pad { padding-top: 6rem; padding-bottom: 6rem; }
-  .section-pad-sm { padding-top: 4rem; padding-bottom: 4rem; }
-  .section-pad-lg { padding-top: 8rem; padding-bottom: 8rem; }
+  .section-pad {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+  .section-pad-sm {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+  .section-pad-lg {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+  }
 }
 
 /* ============================================
@@ -356,7 +408,7 @@ body {
 .badge {
   display: inline-flex;
   align-items: center;
-  font-size: 0.6875rem;     /* 11px */
+  font-size: 0.6875rem; /* 11px */
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -366,18 +418,45 @@ body {
 }
 
 /* Solid */
-.badge-solid-bestseller { background: var(--color-brand-500); color: #fff; }
-.badge-solid-bulk      { background: var(--color-ink-700);   color: #fff; }
-.badge-solid-new       { background: var(--color-success-500); color: #fff; }
+.badge-solid-bestseller {
+  background: var(--color-brand-500);
+  color: #fff;
+}
+.badge-solid-bulk {
+  background: var(--color-ink-700);
+  color: #fff;
+}
+.badge-solid-new {
+  background: var(--color-success-500);
+  color: #fff;
+}
 
 /* Soft — light tinted bg + dark text of same hue */
-.badge-soft-bestseller { background: var(--color-brand-100); color: var(--color-brand-700); }
-.badge-soft-bulk       { background: var(--color-ink-100);   color: var(--color-ink-800); }
-.badge-soft-new        { background: var(--color-success-100); color: var(--color-success-800); }
+.badge-soft-bestseller {
+  background: var(--color-brand-100);
+  color: var(--color-brand-700);
+}
+.badge-soft-bulk {
+  background: var(--color-ink-100);
+  color: var(--color-ink-800);
+}
+.badge-soft-new {
+  background: var(--color-success-100);
+  color: var(--color-success-800);
+}
 
-.dark .badge-soft-bestseller { background: rgb(239 107 42 / 0.18); color: var(--color-brand-300); }
-.dark .badge-soft-bulk       { background: rgb(255 255 255 / 0.10); color: var(--color-neutral-100); }
-.dark .badge-soft-new        { background: rgb(22 163 74 / 0.18); color: var(--color-success-300); }
+.dark .badge-soft-bestseller {
+  background: rgb(239 107 42 / 0.18);
+  color: var(--color-brand-300);
+}
+.dark .badge-soft-bulk {
+  background: rgb(255 255 255 / 0.1);
+  color: var(--color-neutral-100);
+}
+.dark .badge-soft-new {
+  background: rgb(22 163 74 / 0.18);
+  color: var(--color-success-300);
+}
 
 /* Outline — transparent bg + colored border + colored text */
 .badge-outline-bestseller {
@@ -396,9 +475,18 @@ body {
   box-shadow: inset 0 0 0 1.5px var(--color-success-500);
 }
 
-.dark .badge-outline-bestseller { color: var(--color-brand-400); box-shadow: inset 0 0 0 1.5px var(--color-brand-400); }
-.dark .badge-outline-bulk       { color: var(--color-neutral-200); box-shadow: inset 0 0 0 1.5px var(--color-neutral-300); }
-.dark .badge-outline-new        { color: var(--color-success-400); box-shadow: inset 0 0 0 1.5px var(--color-success-400); }
+.dark .badge-outline-bestseller {
+  color: var(--color-brand-400);
+  box-shadow: inset 0 0 0 1.5px var(--color-brand-400);
+}
+.dark .badge-outline-bulk {
+  color: var(--color-neutral-200);
+  box-shadow: inset 0 0 0 1.5px var(--color-neutral-300);
+}
+.dark .badge-outline-new {
+  color: var(--color-success-400);
+  box-shadow: inset 0 0 0 1.5px var(--color-success-400);
+}
 
 /* ============================================
    Badge — corner placement
@@ -414,7 +502,15 @@ body {
   padding: 0.5rem 1rem;
   letter-spacing: 0.08em;
 }
-.badge-corner-tl { border-radius: 0 0 var(--radius-md) 0; }
-.badge-corner-tr { border-radius: 0 0 0 var(--radius-md); }
-.badge-corner-bl { border-radius: 0 var(--radius-md) 0 0; }
-.badge-corner-br { border-radius: var(--radius-md) 0 0 0; }
+.badge-corner-tl {
+  border-radius: 0 0 var(--radius-md) 0;
+}
+.badge-corner-tr {
+  border-radius: 0 0 0 var(--radius-md);
+}
+.badge-corner-bl {
+  border-radius: 0 var(--radius-md) 0 0;
+}
+.badge-corner-br {
+  border-radius: var(--radius-md) 0 0 0;
+}
