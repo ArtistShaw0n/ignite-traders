@@ -1,18 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Script from "next/script";
-import {
-  Breadcrumb,
-  ContactForm,
-  ProductDetailHero,
-  ProductGridSection,
-} from "@/components/organisms";
-import {
-  getAllProducts,
-  getProductBySlug,
-  getRelatedProducts,
-  type Product,
-} from "@/lib/products";
+import { Breadcrumb, ProductDetailHero, ProductGridSection } from "@/components/organisms";
+import { getAllProducts, getProductBySlug, getRelatedProducts, type Product } from "@/lib/products";
 import { productJsonLd } from "@/lib/jsonld";
 import { SITE_PHONE, SITE_WHATSAPP } from "@/lib/site";
 import type { ProductCardProps } from "@/components/molecules/ProductCard";
@@ -26,9 +16,7 @@ export async function generateStaticParams() {
   return all.map((p) => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
   if (!product) return { title: "Product not found" };
@@ -102,36 +90,6 @@ export default async function ProductDetailPage({ params }: PageProps) {
           { label: "Bulk supply", value: product.bulkSupply, highlight: true },
         ]}
       />
-
-      <section
-        id="quote"
-        className="bg-[var(--bg-surface-muted)] section-pad-sm"
-      >
-        <div className="container-site">
-          <div className="mx-auto max-w-3xl">
-            <div className="mb-8 text-center">
-              <p className="text-caption font-semibold uppercase tracking-wide text-brand-600">
-                Request a Quote
-              </p>
-              <h2 className="mt-2 text-h2 font-bold tracking-tight">
-                Get pricing for {product.title}
-              </h2>
-              <p className="mt-3 text-body text-[var(--fg-muted)]">
-                Tell us your quantity and delivery timeline — we typically
-                reply with a written quotation the same business day.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-[var(--border-default)] bg-white p-6 shadow-sm sm:p-8">
-              <ContactForm
-                source="product-page"
-                productId={product.id}
-                showQuantity
-                submitLabel="Request Quote"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
 
       {related.length > 0 && (
         <ProductGridSection

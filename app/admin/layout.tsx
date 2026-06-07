@@ -1,8 +1,6 @@
 import Link from "next/link";
 import { ClerkProvider, UserButton } from "@clerk/nextjs";
 import { AdminNav } from "@/app/admin/_components/AdminNav";
-import { getAdminUser } from "@/lib/auth";
-import { getInquiryStatusCounts } from "@/lib/inquiries";
 
 /**
  * Admin layout — adds ClerkProvider so client hooks (UserButton, useUser)
@@ -13,18 +11,7 @@ import { getInquiryStatusCounts } from "@/lib/inquiries";
  * page load, and the status-update action revalidates these paths so the
  * badge stays current.
  */
-export default async function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const admin = await getAdminUser();
-  let newCount = 0;
-  if (admin) {
-    const counts = await getInquiryStatusCounts();
-    newCount = counts.new;
-  }
-
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider
       signInUrl="/admin/sign-in"
@@ -35,13 +22,10 @@ export default async function AdminLayout({
         <header className="border-b border-[var(--border-default)] bg-white">
           <div className="container-site flex items-center justify-between py-3">
             <div className="flex items-center gap-6">
-              <Link
-                href="/admin"
-                className="text-body-sm font-bold tracking-tight"
-              >
+              <Link href="/admin" className="text-body-sm font-bold tracking-tight">
                 IGNITE Admin
               </Link>
-              <AdminNav newCount={newCount} />
+              <AdminNav />
             </div>
             <div className="flex items-center gap-4">
               <Link
@@ -50,9 +34,7 @@ export default async function AdminLayout({
               >
                 View site →
               </Link>
-              <UserButton
-                appearance={{ elements: { avatarBox: "w-8 h-8" } }}
-              />
+              <UserButton appearance={{ elements: { avatarBox: "w-8 h-8" } }} />
             </div>
           </div>
         </header>

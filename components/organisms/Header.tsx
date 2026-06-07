@@ -36,8 +36,6 @@ const NAV: NavLink[] = [
       { label: "Goggles", href: "/products?category=goggles" },
     ],
   },
-  { label: "FAQ", href: "/#faq" },
-  { label: "Contact Us", href: "/contact" },
   { label: "Design System", href: "/design-system" },
 ];
 
@@ -132,10 +130,7 @@ function NavItem({ link }: { link: NavLink }) {
         aria-haspopup="menu"
       >
         {link.label}
-        <ChevronDown
-          size={14}
-          className={clsx("transition-transform", open && "rotate-180")}
-        />
+        <ChevronDown size={14} className={clsx("transition-transform", open && "rotate-180")} />
       </button>
       {open && (
         <div
@@ -174,11 +169,7 @@ function MobileDrawer({
   return (
     <div className="lg:hidden fixed inset-0 z-50 flex">
       {/* Overlay */}
-      <div
-        className="absolute inset-0 bg-black/50"
-        onClick={onClose}
-        aria-hidden="true"
-      />
+      <div className="absolute inset-0 bg-black/50" onClick={onClose} aria-hidden="true" />
       {/* Panel */}
       <div className="ml-auto relative w-[85%] max-w-[360px] h-full bg-[var(--bg-surface)] shadow-card-hover flex flex-col">
         <div className="flex items-center justify-between px-5 h-16 border-b border-[var(--border-default)]">
@@ -205,10 +196,7 @@ function MobileDrawer({
                   {link.label}
                   <ChevronDown
                     size={16}
-                    className={clsx(
-                      "transition-transform",
-                      productsOpen && "rotate-180",
-                    )}
+                    className={clsx("transition-transform", productsOpen && "rotate-180")}
                   />
                 </button>
                 {productsOpen && (
@@ -240,12 +228,7 @@ function MobileDrawer({
         </nav>
         <div className="p-4 border-t border-[var(--border-default)] space-y-3">
           <CallUsBlock phone={phone} />
-          <Button
-            href={`https://wa.me/${whatsapp}`}
-            variant="whatsapp"
-            size="md"
-            fullWidth
-          >
+          <Button href={`https://wa.me/${whatsapp}`} variant="whatsapp" size="md" fullWidth>
             WhatsApp
           </Button>
         </div>

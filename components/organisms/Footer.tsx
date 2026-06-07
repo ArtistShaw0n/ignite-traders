@@ -10,8 +10,6 @@ const QUICK_LINKS = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
   { label: "Products", href: "/products" },
-  { label: "Request a Quote", href: "/contact" },
-  { label: "Contact Us", href: "/contact" },
 ];
 
 const CATEGORIES = [
@@ -39,8 +37,7 @@ export function Footer({ className }: FooterProps) {
           <div className="space-y-4">
             <Logo size="md" />
             <p className="text-body-sm text-white/70 leading-relaxed max-w-[260px]">
-              Protective Wear & Safety Supply for Pharmaceutical Production
-              Units.
+              Protective Wear & Safety Supply for Pharmaceutical Production Units.
             </p>
             <a
               href="tel:01798214677"
@@ -102,9 +99,7 @@ export function Footer({ className }: FooterProps) {
 
         {/* Copyright bar */}
         <div className="mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <p className="text-body-sm text-white/60">
-            © 2026 Ignite Traders. All rights reserved.
-          </p>
+          <p className="text-body-sm text-white/60">© 2026 Ignite Traders. All rights reserved.</p>
           <p className="text-body-sm text-white/60">Dhaka, Bangladesh</p>
         </div>
       </div>
@@ -112,39 +107,22 @@ export function Footer({ className }: FooterProps) {
   );
 }
 
-function FooterColumn({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
+function FooterColumn({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
       <h3 className="text-caption font-bold uppercase tracking-wider text-brand-400 mb-4">
         {title}
       </h3>
       <ul className="space-y-2.5">
-        {Array.isArray(children)
-          ? children.map((c, i) => <li key={i}>{c}</li>)
-          : children}
+        {Array.isArray(children) ? children.map((c, i) => <li key={i}>{c}</li>) : children}
       </ul>
     </div>
   );
 }
 
-function FooterLink({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
+function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <Link
-      href={href}
-      className="text-body-sm text-white/70 hover:text-brand-400 transition-colors"
-    >
+    <Link href={href} className="text-body-sm text-white/70 hover:text-brand-400 transition-colors">
       {children}
     </Link>
   );

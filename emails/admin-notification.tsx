@@ -57,12 +57,20 @@ export function AdminNotificationEmail({
             {company ? <Row label="Company" value={company} /> : null}
             <Row
               label="Email"
-              value={<Link href={`mailto:${email}`} style={link}>{email}</Link>}
+              value={
+                <Link href={`mailto:${email}`} style={link}>
+                  {email}
+                </Link>
+              }
             />
             {phone ? (
               <Row
                 label="Phone"
-                value={<Link href={`tel:${phone}`} style={link}>{phone}</Link>}
+                value={
+                  <Link href={`tel:${phone}`} style={link}>
+                    {phone}
+                  </Link>
+                }
               />
             ) : null}
             {quantity ? <Row label="Quantity" value={String(quantity)} /> : null}
@@ -79,8 +87,8 @@ export function AdminNotificationEmail({
             Inquiry ID: <code style={code}>{inquiryId}</code>
           </Text>
           <Text style={meta}>
-            Reply directly to this email to reach {name}. (Once the admin
-            dashboard ships in Phase 5, you'll be able to mark status here:{" "}
+            Reply directly to this email to reach {name}. (Once the admin dashboard ships in Phase
+            5, you&apos;ll be able to mark status here:{" "}
             <Link href={`${siteUrl}/admin/inquiries/${inquiryId}`} style={link}>
               open
             </Link>

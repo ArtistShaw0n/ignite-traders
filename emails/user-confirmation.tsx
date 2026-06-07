@@ -40,8 +40,8 @@ export function UserConfirmationEmail({
         <Container style={container}>
           <Heading style={h1}>Thanks for reaching out, {name}.</Heading>
           <Text style={lede}>
-            We've received your inquiry and our procurement team will get back
-            to you within <strong>24 hours on business days</strong>.
+            We&apos;ve received your inquiry and our procurement team will get back to you within{" "}
+            <strong>24 hours on business days</strong>.
           </Text>
 
           {productTitle ? (
@@ -72,9 +72,8 @@ export function UserConfirmationEmail({
             Reference ID: <code style={code}>{inquiryId}</code>
           </Text>
           <Text style={meta}>
-            This is an automated confirmation — please don't reply to this
-            address. To respond, you'll receive a follow-up from our team
-            shortly.
+            This is an automated confirmation — please don&apos;t reply to this address. To respond,
+            you&apos;ll receive a follow-up from our team shortly.
           </Text>
           <Text style={meta}>
             IGNITE Traders · 6/1 South Kallyanpur, Mirpur Road, Dhaka ·{" "}
