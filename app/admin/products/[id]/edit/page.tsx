@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { requireAdmin } from "@/lib/auth";
 import { getProductRowById } from "@/lib/products";
+import { getCategoryOptions } from "@/lib/categories";
 import { updateProduct } from "@/app/actions/admin-products";
 import { ProductForm } from "@/app/admin/_components/ProductForm";
 import { DeleteProductButton } from "@/app/admin/_components/DeleteProductButton";
@@ -24,6 +25,7 @@ export default async function EditProductPage({ params }: PageProps) {
   const row = await getProductRowById(id);
   if (!row) notFound();
 
+  const categories = await getCategoryOptions();
   const badge = row.badge as { color: string; label: string } | null;
   const action = updateProduct.bind(null, id);
 
@@ -46,6 +48,7 @@ export default async function EditProductPage({ params }: PageProps) {
         <ProductForm
           action={action}
           submitLabel="Save changes"
+          categories={categories}
           initial={{
             slug: row.slug,
             title: row.title,

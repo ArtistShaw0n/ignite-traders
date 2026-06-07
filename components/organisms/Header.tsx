@@ -12,6 +12,7 @@ import { clsx } from "@/lib/clsx";
 export interface HeaderProps {
   phone?: string;
   whatsapp?: string;
+  categories?: { slug: string; label: string }[];
   className?: string;
 }
 
@@ -21,31 +22,33 @@ interface NavLink {
   children?: { label: string; href: string }[];
 }
 
-const NAV: NavLink[] = [
-  { label: "Home", href: "/" },
-  { label: "About Us", href: "/about" },
-  {
-    label: "Products",
-    href: "/products",
-    children: [
-      { label: "Protective Gown", href: "/products?category=protective-gown" },
-      { label: "Head Cover", href: "/products?category=head-cover" },
-      { label: "Shoe Cover", href: "/products?category=shoe-cover" },
-      { label: "Gloves", href: "/products?category=gloves" },
-      { label: "Safety Shoes", href: "/products?category=safety-shoes" },
-      { label: "Goggles", href: "/products?category=goggles" },
-    ],
-  },
-  { label: "Design System", href: "/design-system" },
-];
+function buildNav(categories: { slug: string; label: string }[]): NavLink[] {
+  return [
+    { label: "Home", href: "/" },
+    { label: "About Us", href: "/about" },
+    {
+      label: "Products",
+      href: "/products",
+      children: categories.length
+        ? categories.map((c) => ({
+            label: c.label,
+            href: `/products?category=${c.slug}`,
+          }))
+        : undefined,
+    },
+    { label: "Design System", href: "/design-system" },
+  ];
+}
 
 export function Header({
   phone = "01798214677",
   whatsapp = "8801798214677",
+  categories = [],
   className,
 }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [productsOpen, setProductsOpen] = useState(false);
+  const nav = buildNav(categories);
 
   return (
     <header
@@ -60,7 +63,7 @@ export function Header({
 
         {/* Desktop nav */}
         <nav className="hidden lg:flex items-center gap-1">
-          {NAV.map((link) => (
+          {nav.map((link) => (
             <NavItem key={link.href} link={link} />
           ))}
         </nav>
@@ -97,6 +100,7 @@ export function Header({
           onClose={() => setMobileOpen(false)}
           phone={phone}
           whatsapp={whatsapp}
+          nav={nav}
           productsOpen={productsOpen}
           setProductsOpen={setProductsOpen}
         />
@@ -157,12 +161,14 @@ function MobileDrawer({
   onClose,
   phone,
   whatsapp,
+  nav,
   productsOpen,
   setProductsOpen,
 }: {
   onClose: () => void;
   phone: string;
   whatsapp: string;
+  nav: NavLink[];
   productsOpen: boolean;
   setProductsOpen: (v: boolean) => void;
 }) {
@@ -184,7 +190,7 @@ function MobileDrawer({
           </button>
         </div>
         <nav className="flex-1 overflow-y-auto p-4 space-y-1">
-          {NAV.map((link) =>
+          {nav.map((link) =>
             link.children ? (
               <div key={link.href}>
                 <button

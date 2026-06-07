@@ -16,7 +16,8 @@ import {
   getProtectiveGowns,
   type Product,
 } from "@/lib/products";
-import { PRODUCT_CATEGORIES, SITE_PHONE, SITE_WHATSAPP } from "@/lib/site";
+import { SITE_PHONE, SITE_WHATSAPP } from "@/lib/site";
+import { getCategories } from "@/lib/categories";
 import type { ProductCardProps } from "@/components/molecules/ProductCard";
 
 function toCard(p: Product): ProductCardProps {
@@ -37,10 +38,11 @@ function toCard(p: Product): ProductCardProps {
 const OFFER_END_DATE = new Date(Date.now() + 23 * 24 * 60 * 60 * 1000);
 
 export default async function HomePage() {
-  const [featuredRows, protectiveGownRows, bestsellerRows] = await Promise.all([
+  const [featuredRows, protectiveGownRows, bestsellerRows, cats] = await Promise.all([
     getFeaturedProducts(4),
     getProtectiveGowns(4),
     getBestsellers(4),
+    getCategories(),
   ]);
   const featured = featuredRows.map(toCard);
   const protectiveGowns = protectiveGownRows.map(toCard);
@@ -80,7 +82,7 @@ export default async function HomePage() {
 
       <CategoryFilterSection
         title="Built for production environments"
-        categories={PRODUCT_CATEGORIES.map((c) => c.label)}
+        categories={["All", ...cats.map((c) => c.label)]}
         defaultCategory="All"
         tone="muted"
       />

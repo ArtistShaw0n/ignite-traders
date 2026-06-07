@@ -3,6 +3,7 @@ import { Logo } from "@/components/atoms/Logo";
 import { clsx } from "@/lib/clsx";
 
 export interface FooterProps {
+  categories?: { slug: string; label: string }[];
   className?: string;
 }
 
@@ -12,16 +13,7 @@ const QUICK_LINKS = [
   { label: "Products", href: "/products" },
 ];
 
-const CATEGORIES = [
-  { label: "Protective Gown", href: "/products?category=protective-gown" },
-  { label: "Head Cover", href: "/products?category=head-cover" },
-  { label: "Shoe Cover", href: "/products?category=shoe-cover" },
-  { label: "Gloves", href: "/products?category=gloves" },
-  { label: "Safety Shoes", href: "/products?category=safety-shoes" },
-  { label: "Goggles", href: "/products?category=goggles" },
-];
-
-export function Footer({ className }: FooterProps) {
+export function Footer({ categories = [], className }: FooterProps) {
   return (
     <footer
       className={clsx(
@@ -59,9 +51,9 @@ export function Footer({ className }: FooterProps) {
 
           {/* Categories */}
           <FooterColumn title="Categories">
-            {CATEGORIES.map((l) => (
-              <FooterLink key={l.label} href={l.href}>
-                {l.label}
+            {categories.map((c) => (
+              <FooterLink key={c.slug} href={`/products?category=${c.slug}`}>
+                {c.label}
               </FooterLink>
             ))}
           </FooterColumn>

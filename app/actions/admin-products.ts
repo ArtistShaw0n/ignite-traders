@@ -7,6 +7,7 @@ import { db } from "@/db/client";
 import { products } from "@/db/schema";
 import { requireAdmin } from "@/lib/auth";
 import { parseProductForm } from "@/lib/validation/product";
+import { getCategoryOptions } from "@/lib/categories";
 
 export type ProductActionResult =
   | { ok: true; id: string; slug: string }
@@ -34,7 +35,7 @@ export async function createProduct(
 ): Promise<ProductActionResult> {
   await requireAdmin();
 
-  const parsed = parseProductForm(formData);
+  const parsed = parseProductForm(formData, await getCategoryOptions());
   if (!parsed.success) {
     return {
       ok: false,
@@ -97,7 +98,7 @@ export async function updateProduct(
 ): Promise<ProductActionResult> {
   await requireAdmin();
 
-  const parsed = parseProductForm(formData);
+  const parsed = parseProductForm(formData, await getCategoryOptions());
   if (!parsed.success) {
     return {
       ok: false,
@@ -161,9 +162,7 @@ export async function updateProduct(
   redirect("/admin/products");
 }
 
-export async function deleteProduct(
-  id: string,
-): Promise<{ ok: boolean; error?: string }> {
+export async function deleteProduct(id: string): Promise<{ ok: boolean; error?: string }> {
   await requireAdmin();
 
   try {

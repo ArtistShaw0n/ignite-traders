@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { PRODUCT_CATEGORIES } from "@/lib/site";
 
 /**
  * Validation + parsing for the admin Product CMS form.
@@ -17,11 +16,6 @@ const BADGE_LABELS: Record<BadgeColor, string> = {
   bulk: "Bulk",
   new: "New",
 };
-
-/** Selectable categories (everything except the synthetic "all"). */
-export const SELECTABLE_CATEGORIES = PRODUCT_CATEGORIES.filter(
-  (c) => c.slug !== "all",
-);
 
 export interface ProductImage {
   url: string;
@@ -54,10 +48,7 @@ const baseSchema = z.object({
     .trim()
     .min(1, "Slug is required")
     .max(200)
-    .regex(
-      /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-      "Lowercase letters, numbers and single hyphens only",
-    ),
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Lowercase letters, numbers and single hyphens only"),
   categorySlug: z.string().trim().min(1, "Category is required"),
   description: z.string().trim().min(1, "Description is required").max(2000),
   sku: z.string().trim().min(1, "SKU is required").max(100),
@@ -74,7 +65,10 @@ export type ParseResult =
   | { success: true; data: ProductFormData }
   | { success: false; fieldErrors: Record<string, string[] | undefined> };
 
-export function parseProductForm(formData: FormData): ParseResult {
+export function parseProductForm(
+  formData: FormData,
+  categories: { slug: string; label: string }[],
+): ParseResult {
   const raw = Object.fromEntries(formData.entries());
   const parsed = baseSchema.safeParse(raw);
 
@@ -82,9 +76,7 @@ export function parseProductForm(formData: FormData): ParseResult {
     return { success: false, fieldErrors: parsed.error.flatten().fieldErrors };
   }
 
-  const category = SELECTABLE_CATEGORIES.find(
-    (c) => c.slug === parsed.data.categorySlug,
-  );
+  const category = categories.find((c) => c.slug === parsed.data.categorySlug);
   if (!category) {
     return { success: false, fieldErrors: { categorySlug: ["Invalid category"] } };
   }

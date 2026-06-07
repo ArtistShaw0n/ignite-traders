@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { requireAdmin } from "@/lib/auth";
 import { createProduct } from "@/app/actions/admin-products";
 import { ProductForm } from "@/app/admin/_components/ProductForm";
+import { getCategoryOptions } from "@/lib/categories";
 
 export const metadata = {
   title: "New product — Admin",
@@ -11,6 +12,7 @@ export const metadata = {
 
 export default async function NewProductPage() {
   await requireAdmin();
+  const categories = await getCategoryOptions();
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -28,7 +30,7 @@ export default async function NewProductPage() {
       </p>
 
       <div className="mt-8">
-        <ProductForm action={createProduct} submitLabel="Create product" />
+        <ProductForm action={createProduct} submitLabel="Create product" categories={categories} />
       </div>
     </div>
   );

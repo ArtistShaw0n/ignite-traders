@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Plus, Search } from "lucide-react";
 import { requireAdmin } from "@/lib/auth";
 import { getAllProductRows, type ProductRow } from "@/lib/products";
-import { PRODUCT_CATEGORIES } from "@/lib/site";
+import { getCategories } from "@/lib/categories";
 import { clsx } from "@/lib/clsx";
 
 export const metadata = {
@@ -30,7 +30,7 @@ export default async function AdminProductsPage({ searchParams }: PageProps) {
   const rawQuery = (q ?? "").trim();
   const query = rawQuery.toLowerCase();
 
-  const allRows = await getAllProductRows();
+  const [allRows, cats] = await Promise.all([getAllProductRows(), getCategories()]);
 
   // Text search across name / slug / SKU. Applied first so the category
   // pill counts reflect what the current search would actually return.
@@ -46,18 +46,11 @@ export default async function AdminProductsPage({ searchParams }: PageProps) {
   // search. Drives the number shown on each pill.
   const countByCategory = new Map<string, number>();
   for (const r of searchFiltered) {
-    countByCategory.set(
-      r.categorySlug,
-      (countByCategory.get(r.categorySlug) ?? 0) + 1,
-    );
+    countByCategory.set(r.categorySlug, (countByCategory.get(r.categorySlug) ?? 0) + 1);
   }
 
   const activeCategory =
-    category &&
-    category !== "all" &&
-    PRODUCT_CATEGORIES.some((c) => c.slug === category)
-      ? category
-      : undefined;
+    category && category !== "all" && cats.some((c) => c.slug === category) ? category : undefined;
 
   const rows = activeCategory
     ? searchFiltered.filter((r) => r.categorySlug === activeCategory)
@@ -91,7 +84,7 @@ export default async function AdminProductsPage({ searchParams }: PageProps) {
           label="All"
           count={searchFiltered.length}
         />
-        {PRODUCT_CATEGORIES.filter((c) => c.slug !== "all").map((c) => (
+        {cats.map((c) => (
           <CategoryPill
             key={c.slug}
             href={productsHref({ category: c.slug, q: rawQuery || undefined })}
@@ -104,9 +97,7 @@ export default async function AdminProductsPage({ searchParams }: PageProps) {
 
       {/* Search by name / slug / SKU. Plain GET form — works without JS. */}
       <form method="get" className="mt-4 flex flex-wrap items-center gap-2">
-        {activeCategory && (
-          <input type="hidden" name="category" value={activeCategory} />
-        )}
+        {activeCategory && <input type="hidden" name="category" value={activeCategory} />}
         <div className="relative">
           <Search
             size={16}
@@ -169,9 +160,7 @@ export default async function AdminProductsPage({ searchParams }: PageProps) {
                   <tr key={r.id} className="hover:bg-[var(--bg-surface-muted)]">
                     <td className="px-4 py-3">
                       <span className="font-semibold">{r.title}</span>
-                      <span className="block text-caption text-[var(--fg-muted)]">
-                        /{r.slug}
-                      </span>
+                      <span className="block text-caption text-[var(--fg-muted)]">/{r.slug}</span>
                     </td>
                     <td className="px-4 py-3">{r.categoryLabel}</td>
                     <td className="px-4 py-3">{badge?.label ?? "—"}</td>
@@ -185,9 +174,7 @@ export default async function AdminProductsPage({ searchParams }: PageProps) {
                         )}
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-[var(--fg-muted)]">
-                      {r.sortOrder}
-                    </td>
+                    <td className="px-4 py-3 text-[var(--fg-muted)]">{r.sortOrder}</td>
                     <td className="px-4 py-3 text-right">
                       <Link
                         href={`/admin/products/${r.id}/edit`}

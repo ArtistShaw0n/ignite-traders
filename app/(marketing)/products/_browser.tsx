@@ -4,12 +4,7 @@ import { useMemo, useState } from "react";
 import { FilterPill } from "@/components/atoms";
 import { ProductCard } from "@/components/molecules/ProductCard";
 import { Pagination } from "@/components/molecules/Pagination";
-import {
-  BulkQuoteCTA,
-  PageHeader,
-  ResultsBar,
-} from "@/components/organisms";
-import { PRODUCT_CATEGORIES } from "@/lib/site";
+import { BulkQuoteCTA, PageHeader, ResultsBar } from "@/components/organisms";
 import type { Product } from "@/lib/products";
 
 const PER_PAGE = 8;
@@ -22,7 +17,13 @@ const SORT_OPTIONS = [
   { label: "Name: A → Z", value: "name-asc" },
 ];
 
-export function ProductsBrowser({ products }: { products: Product[] }) {
+export function ProductsBrowser({
+  products,
+  categories,
+}: {
+  products: Product[];
+  categories: { slug: string; label: string }[];
+}) {
   const [category, setCategory] = useState<string>("all");
   const [sort, setSort] = useState<SortValue>("popular");
   const [page, setPage] = useState<number>(1);
@@ -35,8 +36,7 @@ export function ProductsBrowser({ products }: { products: Product[] }) {
   const sorted = useMemo(() => {
     const arr = [...filtered];
     if (sort === "newest") return arr.reverse();
-    if (sort === "name-asc")
-      return arr.sort((a, b) => a.title.localeCompare(b.title));
+    if (sort === "name-asc") return arr.sort((a, b) => a.title.localeCompare(b.title));
     return arr;
   }, [filtered, sort]);
 
@@ -57,7 +57,7 @@ export function ProductsBrowser({ products }: { products: Product[] }) {
       <section className="border-b border-[var(--border-default)] bg-[var(--bg-surface)]">
         <div className="container-site py-5">
           <div className="flex gap-2 flex-wrap">
-            {PRODUCT_CATEGORIES.map((c) => (
+            {[{ slug: "all", label: "All" }, ...categories].map((c) => (
               <FilterPill
                 key={c.slug}
                 active={c.slug === category}
@@ -106,19 +106,13 @@ export function ProductsBrowser({ products }: { products: Product[] }) {
           </div>
         ) : (
           <div className="py-20 text-center">
-            <p className="text-body text-[var(--fg-muted)]">
-              No products found in this category.
-            </p>
+            <p className="text-body text-[var(--fg-muted)]">No products found in this category.</p>
           </div>
         )}
 
         {totalPages > 1 && (
           <div className="mt-10 flex justify-center">
-            <Pagination
-              currentPage={safePage}
-              totalPages={totalPages}
-              onPageChange={setPage}
-            />
+            <Pagination currentPage={safePage} totalPages={totalPages} onPageChange={setPage} />
           </div>
         )}
       </section>

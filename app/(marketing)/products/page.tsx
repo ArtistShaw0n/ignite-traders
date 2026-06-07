@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getAllProducts } from "@/lib/products";
+import { getCategoryOptions } from "@/lib/categories";
 import { ProductsBrowser } from "./_browser";
 
 export const metadata: Metadata = {
@@ -9,6 +10,6 @@ export const metadata: Metadata = {
 };
 
 export default async function ProductsPage() {
-  const products = await getAllProducts();
-  return <ProductsBrowser products={products} />;
+  const [products, categories] = await Promise.all([getAllProducts(), getCategoryOptions()]);
+  return <ProductsBrowser products={products} categories={categories} />;
 }

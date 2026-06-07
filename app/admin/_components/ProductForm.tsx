@@ -4,11 +4,7 @@ import { useActionState, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/atoms/Button";
 import { clsx } from "@/lib/clsx";
-import {
-  SELECTABLE_CATEGORIES,
-  BADGE_COLORS,
-  type ProductImage,
-} from "@/lib/validation/product";
+import { BADGE_COLORS, type ProductImage } from "@/lib/validation/product";
 import type { ProductActionResult } from "@/app/actions/admin-products";
 import { ImageUploader } from "@/app/admin/_components/ImageUploader";
 
@@ -36,13 +32,12 @@ export function ProductForm({
   action,
   initial,
   submitLabel,
+  categories,
 }: {
-  action: (
-    prev: ProductActionResult | null,
-    fd: FormData,
-  ) => Promise<ProductActionResult>;
+  action: (prev: ProductActionResult | null, fd: FormData) => Promise<ProductActionResult>;
   initial?: ProductFormInitial;
   submitLabel: string;
+  categories: { slug: string; label: string }[];
 }) {
   const [state, formAction, pending] = useActionState(action, null);
   const fe: FieldErrors = state && !state.ok ? state.fieldErrors : undefined;
@@ -56,13 +51,7 @@ export function ProductForm({
       <input type="hidden" name="images" value={JSON.stringify(images)} />
 
       <div className="grid gap-5 sm:grid-cols-2">
-        <Text
-          label="Title"
-          name="title"
-          defaultValue={initial?.title}
-          required
-          error={fe?.title}
-        />
+        <Text label="Title" name="title" defaultValue={initial?.title} required error={fe?.title} />
         <Text
           label="Slug"
           name="slug"
@@ -82,7 +71,7 @@ export function ProductForm({
           error={fe?.categorySlug}
           options={[
             { value: "", label: "Select a category…" },
-            ...SELECTABLE_CATEGORIES.map((c) => ({
+            ...categories.map((c) => ({
               value: c.slug,
               label: c.label,
             })),
@@ -122,13 +111,7 @@ export function ProductForm({
       <ImageUploader value={images} onChange={setImages} />
 
       <div className="grid gap-5 sm:grid-cols-2">
-        <Text
-          label="SKU"
-          name="sku"
-          defaultValue={initial?.sku}
-          required
-          error={fe?.sku}
-        />
+        <Text label="SKU" name="sku" defaultValue={initial?.sku} required error={fe?.sku} />
         <Text
           label="Material"
           name="material"
@@ -156,16 +139,8 @@ export function ProductForm({
       </div>
 
       <div className="flex flex-wrap gap-x-8 gap-y-3 rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface-muted)] p-4">
-        <Check
-          label="Featured (home grid)"
-          name="featured"
-          defaultChecked={initial?.featured}
-        />
-        <Check
-          label="Bestseller"
-          name="bestseller"
-          defaultChecked={initial?.bestseller}
-        />
+        <Check label="Featured (home grid)" name="featured" defaultChecked={initial?.featured} />
+        <Check label="Bestseller" name="bestseller" defaultChecked={initial?.bestseller} />
         <Check
           label="Protective-gown section"
           name="isProtectiveGown"
@@ -237,13 +212,9 @@ function Label({
       </span>
       {children}
       {hint && !hasError && (
-        <span className="mt-1 block text-caption text-[var(--fg-muted)]">
-          {hint}
-        </span>
+        <span className="mt-1 block text-caption text-[var(--fg-muted)]">{hint}</span>
       )}
-      {hasError && (
-        <span className="mt-1 block text-caption text-red-600">{error![0]}</span>
-      )}
+      {hasError && <span className="mt-1 block text-caption text-red-600">{error![0]}</span>}
     </label>
   );
 }
