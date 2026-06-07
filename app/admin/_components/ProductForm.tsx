@@ -183,7 +183,7 @@ export function ProductForm({
 
 const fieldClass = (hasError: boolean) =>
   clsx(
-    "mt-1 block w-full rounded-md border bg-white px-3 py-2 text-body shadow-sm transition-colors",
+    "mt-1 block w-full rounded-md border bg-[var(--bg-surface)] px-3 py-2 text-body text-[var(--fg-primary)] shadow-sm transition-colors",
     "focus:outline-none focus:ring-1",
     hasError
       ? "border-red-500 focus:border-red-500 focus:ring-red-500"
@@ -192,12 +192,14 @@ const fieldClass = (hasError: boolean) =>
 
 function Label({
   label,
+  name,
   required,
   children,
   hint,
   error,
 }: {
   label: string;
+  name: string;
   required?: boolean;
   children: React.ReactNode;
   hint?: string;
@@ -212,9 +214,15 @@ function Label({
       </span>
       {children}
       {hint && !hasError && (
-        <span className="mt-1 block text-caption text-[var(--fg-muted)]">{hint}</span>
+        <span id={`${name}-hint`} className="mt-1 block text-caption text-[var(--fg-muted)]">
+          {hint}
+        </span>
       )}
-      {hasError && <span className="mt-1 block text-caption text-red-600">{error![0]}</span>}
+      {hasError && (
+        <span id={`${name}-error`} className="mt-1 block text-caption text-red-600">
+          {error![0]}
+        </span>
+      )}
     </label>
   );
 }
@@ -238,9 +246,10 @@ function Text({
   type?: "text" | "number";
   className?: string;
 }) {
+  const describedBy = error?.length ? `${name}-error` : hint ? `${name}-hint` : undefined;
   return (
     <div className={className}>
-      <Label label={label} required={required} hint={hint} error={error}>
+      <Label label={label} name={name} required={required} hint={hint} error={error}>
         <input
           type={type}
           name={name}
@@ -248,6 +257,8 @@ function Text({
           required={required}
           min={type === "number" ? 0 : undefined}
           className={fieldClass(!!error?.length)}
+          aria-invalid={!!error?.length || undefined}
+          aria-describedby={describedBy}
         />
       </Label>
     </div>
@@ -270,13 +281,15 @@ function Textarea({
   error?: string[];
 }) {
   return (
-    <Label label={label} required={required} error={error}>
+    <Label label={label} name={name} required={required} error={error}>
       <textarea
         name={name}
         defaultValue={defaultValue}
         required={required}
         rows={rows}
         className={fieldClass(!!error?.length)}
+        aria-invalid={!!error?.length || undefined}
+        aria-describedby={error?.length ? `${name}-error` : undefined}
       />
     </Label>
   );
@@ -298,12 +311,14 @@ function Select({
   options: { value: string; label: string }[];
 }) {
   return (
-    <Label label={label} required={required} error={error}>
+    <Label label={label} name={name} required={required} error={error}>
       <select
         name={name}
         defaultValue={defaultValue}
         required={required}
         className={fieldClass(!!error?.length)}
+        aria-invalid={!!error?.length || undefined}
+        aria-describedby={error?.length ? `${name}-error` : undefined}
       >
         {options.map((o) => (
           <option key={o.value} value={o.value}>

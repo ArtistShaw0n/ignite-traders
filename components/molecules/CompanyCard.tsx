@@ -35,6 +35,7 @@ export function CompanyCard(props: CompanyCardProps) {
           baseCard,
           "flex items-center justify-center p-5 min-h-[80px] hover:border-[var(--border-strong)]",
         )}
+        role="img"
         aria-label={props.alt}
       >
         {props.logo}

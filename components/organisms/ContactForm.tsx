@@ -175,9 +175,12 @@ type FieldProps = {
 function Field(props: FieldProps) {
   const { label, name, required, error, hint } = props;
   const hasError = !!error?.length;
+  const errorId = `${name}-error`;
+  const hintId = `${name}-hint`;
+  const describedBy = hasError ? errorId : hint ? hintId : undefined;
 
   const fieldClass = clsx(
-    "mt-1 block w-full rounded-md border bg-white px-3 py-2 text-body shadow-sm transition-colors",
+    "mt-1 block w-full rounded-md border bg-[var(--bg-surface)] px-3 py-2 text-body text-[var(--fg-primary)] shadow-sm transition-colors",
     "placeholder:text-[var(--fg-muted)]",
     "focus:outline-none focus:ring-1",
     hasError
@@ -199,6 +202,7 @@ function Field(props: FieldProps) {
           required={required}
           className={fieldClass}
           aria-invalid={hasError || undefined}
+          aria-describedby={describedBy}
         />
       ) : (
         <input
@@ -210,13 +214,20 @@ function Field(props: FieldProps) {
           required={required}
           className={fieldClass}
           aria-invalid={hasError || undefined}
+          aria-describedby={describedBy}
         />
       )}
 
       {hint && !hasError && (
-        <span className="mt-1 block text-caption text-[var(--fg-muted)]">{hint}</span>
+        <span id={hintId} className="mt-1 block text-caption text-[var(--fg-muted)]">
+          {hint}
+        </span>
       )}
-      {hasError && <span className="mt-1 block text-caption text-red-600">{error![0]}</span>}
+      {hasError && (
+        <span id={errorId} className="mt-1 block text-caption text-red-600">
+          {error![0]}
+        </span>
+      )}
     </label>
   );
 }

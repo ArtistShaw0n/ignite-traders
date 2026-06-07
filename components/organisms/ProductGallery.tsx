@@ -33,7 +33,7 @@ export function ProductGallery({
         {hasImages ? (
           <Image
             src={images[active].src}
-            alt={images[active].alt ?? ""}
+            alt={images[active].alt ?? "Product image"}
             fill
             className="object-contain"
             sizes="(min-width: 1024px) 50vw, 100vw"
