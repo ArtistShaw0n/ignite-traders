@@ -15,6 +15,13 @@
       "when": 1780492609015,
       "tag": "0001_overconfident_nebula",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1780826402578,
+      "tag": "0002_goofy_ricochet",
+      "breakpoints": true
     }
   ]
 }

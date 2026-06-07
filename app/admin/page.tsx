@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { Package } from "lucide-react";
+import { FolderTree, Package } from "lucide-react";
 import { requireAdmin } from "@/lib/auth";
 import { getAllProductRows } from "@/lib/products";
+import { getCategories } from "@/lib/categories";
 
 export const metadata = {
   title: "Admin",
@@ -10,7 +11,10 @@ export const metadata = {
 
 export default async function AdminHomePage() {
   const { email } = await requireAdmin();
-  const products = await getAllProductRows();
+  const [products, cats] = await Promise.all([
+    getAllProductRows(),
+    getCategories(),
+  ]);
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -20,19 +24,44 @@ export default async function AdminHomePage() {
       </p>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
-        <Link
+        <NavCard
           href="/admin/products"
-          className="rounded-xl border border-[var(--border-default)] bg-white p-5 transition-colors hover:bg-[var(--bg-surface-muted)]"
-        >
-          <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-brand-50 text-brand-600">
-            <Package size={22} aria-hidden="true" />
-          </span>
-          <p className="mt-3 text-h4 font-semibold">Products</p>
-          <p className="mt-1 text-body-sm text-[var(--fg-muted)]">
-            {products.length} in the catalog
-          </p>
-        </Link>
+          icon={<Package size={22} aria-hidden="true" />}
+          title="Products"
+          desc={`${products.length} in the catalog`}
+        />
+        <NavCard
+          href="/admin/categories"
+          icon={<FolderTree size={22} aria-hidden="true" />}
+          title="Categories"
+          desc={`${cats.length} categories`}
+        />
       </div>
     </div>
+  );
+}
+
+function NavCard({
+  href,
+  icon,
+  title,
+  desc,
+}: {
+  href: string;
+  icon: React.ReactNode;
+  title: string;
+  desc: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="rounded-xl border border-[var(--border-default)] bg-white p-5 transition-colors hover:bg-[var(--bg-surface-muted)]"
+    >
+      <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-brand-50 text-brand-600">
+        {icon}
+      </span>
+      <p className="mt-3 text-h4 font-semibold">{title}</p>
+      <p className="mt-1 text-body-sm text-[var(--fg-muted)]">{desc}</p>
+    </Link>
   );
 }

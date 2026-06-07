@@ -7,6 +7,7 @@ import { clsx } from "@/lib/clsx";
 const LINKS: { href: string; label: string; exact?: boolean }[] = [
   { href: "/admin", label: "Dashboard", exact: true },
   { href: "/admin/products", label: "Products" },
+  { href: "/admin/categories", label: "Categories" },
 ];
 
 export function AdminNav() {

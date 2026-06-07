@@ -60,6 +60,30 @@ export const products = pgTable(
   ],
 );
 
+/**
+ * Product categories — admin-managed. Products keep categorySlug/categoryLabel
+ * denormalized; this table is the source of truth for the category dropdown,
+ * the product filters, and the nav menus.
+ */
+export const categories = pgTable(
+  "categories",
+  {
+    id: uuid("id")
+      .primaryKey()
+      .default(sql`gen_random_uuid()`),
+    slug: text("slug").notNull().unique(),
+    label: text("label").notNull(),
+    sortOrder: integer("sort_order").notNull().default(0),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [index("categories_sort_order_idx").on(t.sortOrder)],
+);
+
 /** Inquiry pipeline status. */
 export const inquiryStatusEnum = pgEnum("inquiry_status", [
   "new",
@@ -148,3 +172,5 @@ export type Inquiry = typeof inquiries.$inferSelect;
 export type NewInquiry = typeof inquiries.$inferInsert;
 export type EmailLog = typeof emailLog.$inferSelect;
 export type NewEmailLog = typeof emailLog.$inferInsert;
+export type Category = typeof categories.$inferSelect;
+export type NewCategory = typeof categories.$inferInsert;
