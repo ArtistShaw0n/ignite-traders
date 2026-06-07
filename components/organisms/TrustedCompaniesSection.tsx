@@ -1,8 +1,5 @@
 import { SectionLabel } from "@/components/atoms/SectionLabel";
-import {
-  CompanyCard,
-  type CompanyCardProps,
-} from "@/components/molecules/CompanyCard";
+import { CompanyCard, type CompanyCardProps } from "@/components/molecules/CompanyCard";
 import { clsx } from "@/lib/clsx";
 
 export interface TrustedCompaniesSectionProps {

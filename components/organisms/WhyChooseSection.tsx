@@ -1,8 +1,5 @@
 import { SectionLabel } from "@/components/atoms/SectionLabel";
-import {
-  FeatureCard,
-  type FeatureCardVariant,
-} from "@/components/molecules/FeatureCard";
+import { FeatureCard, type FeatureCardVariant } from "@/components/molecules/FeatureCard";
 import { clsx } from "@/lib/clsx";
 
 export interface WhyChooseItem {

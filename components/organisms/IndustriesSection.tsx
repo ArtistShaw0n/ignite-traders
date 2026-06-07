@@ -1,8 +1,5 @@
 import { SectionLabel } from "@/components/atoms/SectionLabel";
-import {
-  IndustryCard,
-  type IndustryCardVariant,
-} from "@/components/molecules/IndustryCard";
+import { IndustryCard, type IndustryCardVariant } from "@/components/molecules/IndustryCard";
 import { clsx } from "@/lib/clsx";
 
 export interface IndustriesSectionItem {

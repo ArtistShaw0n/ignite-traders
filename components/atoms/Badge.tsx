@@ -2,12 +2,7 @@ import { clsx } from "@/lib/clsx";
 
 export type BadgeColor = "bestseller" | "bulk" | "new";
 export type BadgeStyle = "solid" | "soft" | "outline";
-export type BadgePlacement =
-  | "inline"
-  | "corner-tl"
-  | "corner-tr"
-  | "corner-bl"
-  | "corner-br";
+export type BadgePlacement = "inline" | "corner-tl" | "corner-tr" | "corner-bl" | "corner-br";
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   color?: BadgeColor;
@@ -56,12 +51,7 @@ export function Badge({
 }: BadgeProps) {
   return (
     <span
-      className={clsx(
-        "badge",
-        styleClass[variant][color],
-        placementClass[placement],
-        className,
-      )}
+      className={clsx("badge", styleClass[variant][color], placementClass[placement], className)}
       {...rest}
     >
       {children}

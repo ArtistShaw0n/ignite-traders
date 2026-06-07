@@ -12,12 +12,10 @@ export default function NotFound() {
             <p className="text-[8rem] sm:text-[10rem] font-black leading-none text-brand-500 tracking-tight">
               404
             </p>
-            <h1 className="text-h1 text-[var(--fg-primary)] tracking-tight">
-              Page not found
-            </h1>
+            <h1 className="text-h1 text-[var(--fg-primary)] tracking-tight">Page not found</h1>
             <p className="text-body-lg text-[var(--fg-secondary)]">
-              The page you&apos;re looking for doesn&apos;t exist or has been moved.
-              Let&apos;s get you back on track.
+              The page you&apos;re looking for doesn&apos;t exist or has been moved. Let&apos;s get
+              you back on track.
             </p>
             <div className="flex flex-wrap gap-3 justify-center pt-2">
               <Button href="/" variant="primary" size="md">

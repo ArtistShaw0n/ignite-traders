@@ -17,17 +17,10 @@ const sizeClass: Record<IconBoxSize, string> = {
 
 const toneClass: Record<IconBoxTone, string> = {
   brand: "bg-brand-50 text-brand-600 dark:bg-brand-500/15 dark:text-brand-400",
-  neutral:
-    "bg-[var(--bg-surface-muted)] text-[var(--fg-secondary)]",
+  neutral: "bg-[var(--bg-surface-muted)] text-[var(--fg-secondary)]",
 };
 
-export function IconBox({
-  size = "md",
-  tone = "brand",
-  icon,
-  className,
-  ...rest
-}: IconBoxProps) {
+export function IconBox({ size = "md", tone = "brand", icon, className, ...rest }: IconBoxProps) {
   return (
     <div
       className={clsx(

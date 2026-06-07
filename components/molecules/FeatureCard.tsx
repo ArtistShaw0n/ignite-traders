@@ -36,9 +36,7 @@ export function FeatureCard({
       >
         {icon && <IconBox icon={icon} size="md" tone="brand" />}
         <h3 className="text-h4 text-[var(--fg-primary)] mt-1">{title}</h3>
-        <p className="text-body-sm text-[var(--fg-secondary)] leading-relaxed">
-          {description}
-        </p>
+        <p className="text-body-sm text-[var(--fg-secondary)] leading-relaxed">{description}</p>
       </div>
     );
   }
@@ -60,9 +58,7 @@ export function FeatureCard({
         </span>
         <div className="relative z-10 flex flex-col gap-2 pr-14">
           <h3 className="text-h4 text-[var(--fg-primary)]">{title}</h3>
-          <p className="text-body-sm text-[var(--fg-secondary)] leading-relaxed">
-            {description}
-          </p>
+          <p className="text-body-sm text-[var(--fg-secondary)] leading-relaxed">{description}</p>
         </div>
       </div>
     );
@@ -76,13 +72,9 @@ export function FeatureCard({
         className,
       )}
     >
-      <span className="text-body-sm font-bold text-brand-500 dark:text-brand-400">
-        {number}
-      </span>
+      <span className="text-body-sm font-bold text-brand-500 dark:text-brand-400">{number}</span>
       <h3 className="text-h4 text-[var(--fg-primary)]">{title}</h3>
-      <p className="text-body-sm text-[var(--fg-secondary)] leading-relaxed">
-        {description}
-      </p>
+      <p className="text-body-sm text-[var(--fg-secondary)] leading-relaxed">{description}</p>
     </div>
   );
 }

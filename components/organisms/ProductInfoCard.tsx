@@ -1,10 +1,7 @@
 import { Badge } from "@/components/atoms/Badge";
 import { CallUsBlock } from "@/components/molecules/CallUsBlock";
 import { WhatsAppCTA } from "@/components/molecules/WhatsAppCTA";
-import {
-  ProductSpecRow,
-  type ProductSpecRowProps,
-} from "@/components/molecules/ProductSpecRow";
+import { ProductSpecRow, type ProductSpecRowProps } from "@/components/molecules/ProductSpecRow";
 import { clsx } from "@/lib/clsx";
 
 export interface ProductInfoCardProps {
@@ -39,12 +36,8 @@ export function ProductInfoCard({
         <Badge color="bestseller" variant="soft" placement="inline">
           {category}
         </Badge>
-        <h1 className="text-h2 text-[var(--fg-primary)] tracking-tight">
-          {title}
-        </h1>
-        <p className="text-body text-[var(--fg-secondary)] leading-relaxed">
-          {description}
-        </p>
+        <h1 className="text-h2 text-[var(--fg-primary)] tracking-tight">{title}</h1>
+        <p className="text-body text-[var(--fg-secondary)] leading-relaxed">{description}</p>
       </div>
 
       <dl className="space-y-0 border-y border-[var(--border-default)] py-2">

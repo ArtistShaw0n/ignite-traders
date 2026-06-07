@@ -5,21 +5,13 @@ import { useRouter } from "next/navigation";
 import { Trash2 } from "lucide-react";
 import { deleteProduct } from "@/app/actions/admin-products";
 
-export function DeleteProductButton({
-  id,
-  title,
-}: {
-  id: string;
-  title: string;
-}) {
+export function DeleteProductButton({ id, title }: { id: string; title: string }) {
   const [pending, startTransition] = useTransition();
   const router = useRouter();
 
   function onDelete() {
     if (
-      !window.confirm(
-        `Delete "${title}"? This removes it from the live site and can't be undone.`,
-      )
+      !window.confirm(`Delete "${title}"? This removes it from the live site and can't be undone.`)
     ) {
       return;
     }

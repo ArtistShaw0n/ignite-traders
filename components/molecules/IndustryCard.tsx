@@ -15,12 +15,7 @@ export interface IndustryCardProps {
   className?: string;
 }
 
-export function IndustryCard({
-  name,
-  icon,
-  variant = "default",
-  className,
-}: IndustryCardProps) {
+export function IndustryCard({ name, icon, variant = "default", className }: IndustryCardProps) {
   if (variant === "centered") {
     return (
       <div
@@ -30,9 +25,7 @@ export function IndustryCard({
         )}
       >
         <IconBox icon={icon} size="md" tone="brand" />
-        <p className="text-body font-semibold text-[var(--fg-primary)] leading-snug">
-          {name}
-        </p>
+        <p className="text-body font-semibold text-[var(--fg-primary)] leading-snug">{name}</p>
       </div>
     );
   }
@@ -48,9 +41,7 @@ export function IndustryCard({
         <span className="text-brand-500 dark:text-brand-400 transition-transform group-hover:scale-110">
           {icon}
         </span>
-        <p className="text-body font-semibold text-[var(--fg-primary)] leading-snug">
-          {name}
-        </p>
+        <p className="text-body font-semibold text-[var(--fg-primary)] leading-snug">{name}</p>
       </div>
     );
   }
@@ -64,9 +55,7 @@ export function IndustryCard({
       )}
     >
       <IconBox icon={icon} size="md" tone="brand" />
-      <p className="text-body font-semibold text-[var(--fg-primary)] leading-snug">
-        {name}
-      </p>
+      <p className="text-body font-semibold text-[var(--fg-primary)] leading-snug">{name}</p>
     </div>
   );
 }

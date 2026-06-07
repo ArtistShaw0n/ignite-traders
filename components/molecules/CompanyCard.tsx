@@ -17,11 +17,7 @@ type InitialsVariant = {
   name: string;
 };
 
-export type CompanyCardProps = (
-  | LogoOnlyVariant
-  | StackedVariant
-  | InitialsVariant
-) & {
+export type CompanyCardProps = (LogoOnlyVariant | StackedVariant | InitialsVariant) & {
   className?: string;
 };
 
@@ -56,9 +52,7 @@ export function CompanyCard(props: CompanyCardProps) {
         )}
         aria-label={props.alt}
       >
-        <div className="flex-1 flex items-center justify-center">
-          {props.logo}
-        </div>
+        <div className="flex-1 flex items-center justify-center">{props.logo}</div>
         <p className="text-body-sm font-medium text-[var(--fg-primary)] text-center leading-snug">
           {props.name}
         </p>

@@ -27,19 +27,11 @@ export function ContactCard({
       <div className="container-site">
         <div className="max-w-2xl space-y-5">
           <SectionLabel>{label}</SectionLabel>
-          <h2 className="text-h2 text-[var(--fg-primary)] tracking-tight">
-            {title}
-          </h2>
-          <p className="text-body text-[var(--fg-secondary)] leading-relaxed">
-            {description}
-          </p>
+          <h2 className="text-h2 text-[var(--fg-primary)] tracking-tight">{title}</h2>
+          <p className="text-body text-[var(--fg-secondary)] leading-relaxed">{description}</p>
           <div className="flex items-center gap-4 flex-wrap pt-2">
             <CallUsBlock phone={phone} />
-            <WhatsAppCTA
-              phone={whatsapp}
-              message={whatsappMessage}
-              size="md"
-            />
+            <WhatsAppCTA phone={whatsapp} message={whatsappMessage} size="md" />
           </div>
         </div>
       </div>

@@ -84,9 +84,7 @@ export function ProductCard({
         <h3 className="mt-2 text-lg font-bold leading-snug text-[var(--fg-primary)] line-clamp-2 min-h-[2.75em]">
           {title}
         </h3>
-        <p className="mt-1.5 text-body-sm text-[var(--fg-secondary)]">
-          Sizes: {sizes}
-        </p>
+        <p className="mt-1.5 text-body-sm text-[var(--fg-secondary)]">Sizes: {sizes}</p>
 
         <div className="mt-4 pt-4 border-t border-[var(--border-muted)] flex justify-center">
           <span className="inline-flex items-center gap-1.5 text-body font-bold text-brand-500 group-hover:text-brand-600 dark:text-brand-400 dark:group-hover:text-brand-300 transition-colors">

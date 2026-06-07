@@ -30,9 +30,7 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
               ) : (
                 <span
                   className={
-                    isLast
-                      ? "font-semibold text-[var(--fg-primary)]"
-                      : "text-[var(--fg-muted)]"
+                    isLast ? "font-semibold text-[var(--fg-primary)]" : "text-[var(--fg-muted)]"
                   }
                   aria-current={isLast ? "page" : undefined}
                 >
@@ -40,11 +38,7 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
                 </span>
               )}
               {!isLast && (
-                <ChevronRight
-                  size={14}
-                  className="text-[var(--fg-muted)]"
-                  aria-hidden="true"
-                />
+                <ChevronRight size={14} className="text-[var(--fg-muted)]" aria-hidden="true" />
               )}
             </li>
           );

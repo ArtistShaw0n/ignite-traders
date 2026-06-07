@@ -26,11 +26,7 @@ function compute(target: Date): TimeLeft {
   return { days, hours, minutes };
 }
 
-export function CountdownTimer({
-  targetDate,
-  tone = "onBrand",
-  className,
-}: CountdownTimerProps) {
+export function CountdownTimer({ targetDate, tone = "onBrand", className }: CountdownTimerProps) {
   // Stabilise `target` so it doesn't trigger the effect on every render.
   const target = useMemo(
     () => (typeof targetDate === "string" ? new Date(targetDate) : targetDate),
@@ -52,10 +48,7 @@ export function CountdownTimer({
     tone === "onBrand"
       ? "bg-white/15 text-white"
       : "bg-[var(--bg-surface-muted)] text-[var(--fg-primary)]";
-  const labelClasses =
-    tone === "onBrand"
-      ? "text-white/70"
-      : "text-[var(--fg-muted)]";
+  const labelClasses = tone === "onBrand" ? "text-white/70" : "text-[var(--fg-muted)]";
 
   return (
     <div
@@ -106,10 +99,7 @@ function Segment({
         {value !== undefined ? String(value).padStart(2, "0") : "--"}
       </span>
       <span
-        className={clsx(
-          "text-caption font-semibold uppercase tracking-wider mt-1",
-          labelClasses,
-        )}
+        className={clsx("text-caption font-semibold uppercase tracking-wider mt-1", labelClasses)}
       >
         {label}
       </span>

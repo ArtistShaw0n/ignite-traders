@@ -2,10 +2,7 @@
 
 import { useActionState } from "react";
 import { Button } from "@/components/atoms/Button";
-import {
-  submitInquiry,
-  type SubmitInquiryResult,
-} from "@/app/actions/inquiries";
+import { submitInquiry, type SubmitInquiryResult } from "@/app/actions/inquiries";
 import { clsx } from "@/lib/clsx";
 
 const initialState: SubmitInquiryResult | null = null;
@@ -34,10 +31,7 @@ export function ContactForm({
   submitLabel = "Send Inquiry",
   className,
 }: ContactFormProps) {
-  const [state, formAction, pending] = useActionState(
-    submitInquiry,
-    initialState,
-  );
+  const [state, formAction, pending] = useActionState(submitInquiry, initialState);
 
   if (state?.ok) {
     return (
@@ -50,9 +44,8 @@ export function ContactForm({
       >
         <h3 className="font-bold text-h4">Thanks — we got your inquiry.</h3>
         <p className="mt-2 text-body-sm leading-relaxed">
-          Our procurement team typically replies within 24 hours on business
-          days. For urgent requests, message us on WhatsApp for a faster
-          response.
+          Our procurement team typically replies within 24 hours on business days. For urgent
+          requests, message us on WhatsApp for a faster response.
         </p>
       </div>
     );
@@ -67,20 +60,12 @@ export function ContactForm({
       >
         <label>
           Website
-          <input
-            type="text"
-            name="website"
-            tabIndex={-1}
-            autoComplete="off"
-            defaultValue=""
-          />
+          <input type="text" name="website" tabIndex={-1} autoComplete="off" defaultValue="" />
         </label>
       </div>
 
       <input type="hidden" name="source" value={source} />
-      {productId && (
-        <input type="hidden" name="productId" value={productId} />
-      )}
+      {productId && <input type="hidden" name="productId" value={productId} />}
 
       <div className="grid sm:grid-cols-2 gap-4">
         <Field
@@ -150,8 +135,8 @@ export function ContactForm({
       </div>
 
       <p className="text-caption text-[var(--fg-muted)]">
-        By submitting, you agree to be contacted about your inquiry. We never
-        share your details with third parties.
+        By submitting, you agree to be contacted about your inquiry. We never share your details
+        with third parties.
       </p>
     </form>
   );
@@ -184,10 +169,7 @@ type FieldProps = {
       inputMode?: never;
       min?: never;
       autoComplete?: never;
-    } & Omit<
-      React.TextareaHTMLAttributes<HTMLTextAreaElement>,
-      "name" | "required" | "rows"
-    >)
+    } & Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "name" | "required" | "rows">)
 );
 
 function Field(props: FieldProps) {
@@ -232,15 +214,9 @@ function Field(props: FieldProps) {
       )}
 
       {hint && !hasError && (
-        <span className="mt-1 block text-caption text-[var(--fg-muted)]">
-          {hint}
-        </span>
+        <span className="mt-1 block text-caption text-[var(--fg-muted)]">{hint}</span>
       )}
-      {hasError && (
-        <span className="mt-1 block text-caption text-red-600">
-          {error![0]}
-        </span>
-      )}
+      {hasError && <span className="mt-1 block text-caption text-red-600">{error![0]}</span>}
     </label>
   );
 }

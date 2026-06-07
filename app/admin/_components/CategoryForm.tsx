@@ -17,10 +17,7 @@ export function CategoryForm({
   initial,
   submitLabel,
 }: {
-  action: (
-    prev: CategoryActionResult | null,
-    fd: FormData,
-  ) => Promise<CategoryActionResult>;
+  action: (prev: CategoryActionResult | null, fd: FormData) => Promise<CategoryActionResult>;
   initial?: CategoryFormInitial;
   submitLabel: string;
 }) {
@@ -120,15 +117,9 @@ function Field({
           )}
         />
         {hint && !hasError && (
-          <span className="mt-1 block text-caption text-[var(--fg-muted)]">
-            {hint}
-          </span>
+          <span className="mt-1 block text-caption text-[var(--fg-muted)]">{hint}</span>
         )}
-        {hasError && (
-          <span className="mt-1 block text-caption text-red-600">
-            {error![0]}
-          </span>
-        )}
+        {hasError && <span className="mt-1 block text-caption text-red-600">{error![0]}</span>}
       </label>
     </div>
   );

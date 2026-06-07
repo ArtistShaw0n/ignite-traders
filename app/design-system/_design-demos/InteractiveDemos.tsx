@@ -8,11 +8,7 @@ export function PaginationDemo() {
   const [page, setPage] = useState(1);
   return (
     <div className="space-y-3">
-      <Pagination
-        currentPage={page}
-        totalPages={13}
-        onPageChange={setPage}
-      />
+      <Pagination currentPage={page} totalPages={13} onPageChange={setPage} />
       <p className="text-caption text-[var(--fg-muted)]">
         Current page: <span className="font-semibold">{page}</span> / 13
       </p>

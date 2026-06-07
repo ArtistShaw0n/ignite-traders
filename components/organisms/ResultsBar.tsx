@@ -27,18 +27,10 @@ export function ResultsBar({
   className,
 }: ResultsBarProps) {
   return (
-    <div
-      className={clsx(
-        "flex items-center justify-between gap-4 flex-wrap py-4",
-        className,
-      )}
-    >
+    <div className={clsx("flex items-center justify-between gap-4 flex-wrap py-4", className)}>
       <p className="text-body-sm text-[var(--fg-secondary)]">
-        Showing{" "}
-        <span className="font-semibold text-[var(--fg-primary)]">{shown}</span>{" "}
-        of{" "}
-        <span className="font-semibold text-[var(--fg-primary)]">{total}</span>{" "}
-        products
+        Showing <span className="font-semibold text-[var(--fg-primary)]">{shown}</span> of{" "}
+        <span className="font-semibold text-[var(--fg-primary)]">{total}</span> products
       </p>
       <Dropdown
         label="Sort"

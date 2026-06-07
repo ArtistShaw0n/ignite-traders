@@ -16,9 +16,7 @@ function readInitialTheme(): Theme {
   try {
     const stored = localStorage.getItem("theme") as Theme | null;
     if (stored === "light" || stored === "dark") return stored;
-    return window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   } catch {
     return "light";
   }
@@ -47,15 +45,9 @@ export function ThemeToggle() {
   return (
     <button
       type="button"
-      onClick={() =>
-        mounted && setTheme(theme === "light" ? "dark" : "light")
-      }
+      onClick={() => mounted && setTheme(theme === "light" ? "dark" : "light")}
       aria-label={
-        !mounted
-          ? "Toggle theme"
-          : isDark
-            ? "Switch to light mode"
-            : "Switch to dark mode"
+        !mounted ? "Toggle theme" : isDark ? "Switch to light mode" : "Switch to dark mode"
       }
       suppressHydrationWarning
       className="inline-flex items-center justify-center w-10 h-10 rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--fg-primary)] hover:bg-[var(--bg-surface-muted)] transition-colors"

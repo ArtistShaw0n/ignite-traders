@@ -22,25 +22,15 @@ export function RequestQuoteCTA({
   className,
 }: RequestQuoteCTAProps) {
   return (
-    <section
-      className={clsx("section-pad-sm bg-ink-600 text-white", className)}
-    >
+    <section className={clsx("section-pad-sm bg-ink-600 text-white", className)}>
       <div className="container-site grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-center">
         <div className="space-y-3">
-          <p className="text-caption font-bold uppercase tracking-wider text-brand-400">
-            {label}
-          </p>
+          <p className="text-caption font-bold uppercase tracking-wider text-brand-400">{label}</p>
           <h2 className="text-h2 text-white tracking-tight">{title}</h2>
-          <p className="text-body text-white/80 max-w-2xl leading-relaxed">
-            {description}
-          </p>
+          <p className="text-body text-white/80 max-w-2xl leading-relaxed">{description}</p>
         </div>
         <div className="flex flex-col sm:flex-row lg:flex-col gap-4 lg:items-end">
-          <WhatsAppCTA
-            phone={whatsapp}
-            message={whatsappMessage}
-            size="lg"
-          />
+          <WhatsAppCTA phone={whatsapp} message={whatsappMessage} size="lg" />
           <CallUsBlock phone={phone} onDark label="Call Directly" />
         </div>
       </div>

@@ -5,13 +5,7 @@ import {
   type InquiryStatus,
 } from "@/lib/inquiry-status";
 
-export function StatusBadge({
-  status,
-  className,
-}: {
-  status: InquiryStatus;
-  className?: string;
-}) {
+export function StatusBadge({ status, className }: { status: InquiryStatus; className?: string }) {
   return (
     <span
       className={clsx(

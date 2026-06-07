@@ -11,10 +11,7 @@ export const metadata = {
 export default async function AdminCategoriesPage() {
   await requireAdmin();
 
-  const [cats, counts] = await Promise.all([
-    getCategories(),
-    getProductCountsByCategory(),
-  ]);
+  const [cats, counts] = await Promise.all([getCategories(), getProductCountsByCategory()]);
 
   return (
     <div>
@@ -55,12 +52,8 @@ export default async function AdminCategoriesPage() {
                 <tr key={c.id} className="hover:bg-[var(--bg-surface-muted)]">
                   <td className="px-4 py-3 font-semibold">{c.label}</td>
                   <td className="px-4 py-3 text-[var(--fg-muted)]">/{c.slug}</td>
-                  <td className="px-4 py-3 text-[var(--fg-muted)]">
-                    {counts[c.slug] ?? 0}
-                  </td>
-                  <td className="px-4 py-3 text-[var(--fg-muted)]">
-                    {c.sortOrder}
-                  </td>
+                  <td className="px-4 py-3 text-[var(--fg-muted)]">{counts[c.slug] ?? 0}</td>
+                  <td className="px-4 py-3 text-[var(--fg-muted)]">{c.sortOrder}</td>
                   <td className="px-4 py-3 text-right">
                     <Link
                       href={`/admin/categories/${c.id}/edit`}

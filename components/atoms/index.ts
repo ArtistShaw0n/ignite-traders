@@ -5,11 +5,7 @@ export { Badge } from "./Badge";
 export type { BadgeProps, BadgeColor, BadgeStyle } from "./Badge";
 
 export { BrandWordmark } from "./BrandWordmark";
-export type {
-  BrandWordmarkProps,
-  BrandWordmarkSize,
-  BrandWordmarkWeight,
-} from "./BrandWordmark";
+export type { BrandWordmarkProps, BrandWordmarkSize, BrandWordmarkWeight } from "./BrandWordmark";
 
 export { Button } from "./Button";
 export type { ButtonProps, ButtonVariant, ButtonSize } from "./Button";

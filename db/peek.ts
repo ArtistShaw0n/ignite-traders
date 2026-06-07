@@ -7,11 +7,7 @@ import { inquiries, emailLog } from "./schema";
 
 async function main() {
   // Latest inquiries
-  const inq = await db
-    .select()
-    .from(inquiries)
-    .orderBy(desc(inquiries.createdAt))
-    .limit(5);
+  const inq = await db.select().from(inquiries).orderBy(desc(inquiries.createdAt)).limit(5);
 
   console.log(`\n📥 Recent inquiries: ${inq.length}\n`);
   for (const r of inq) {
@@ -27,11 +23,7 @@ async function main() {
   console.log("─".repeat(60));
 
   // Latest email log entries
-  const logs = await db
-    .select()
-    .from(emailLog)
-    .orderBy(desc(emailLog.createdAt))
-    .limit(10);
+  const logs = await db.select().from(emailLog).orderBy(desc(emailLog.createdAt)).limit(10);
 
   console.log(`\n📧 Recent email log entries: ${logs.length}\n`);
   for (const l of logs) {

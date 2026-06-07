@@ -55,10 +55,7 @@ export async function submitInquiry(
 
   // Privacy: hash IP + truncate. We never store the raw IP.
   const h = await headers();
-  const rawIp =
-    h.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    h.get("x-real-ip") ??
-    "unknown";
+  const rawIp = h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? h.get("x-real-ip") ?? "unknown";
   const ipHash = createHash("sha256").update(rawIp).digest("hex").slice(0, 32);
   const userAgent = h.get("user-agent")?.slice(0, 500) ?? null;
 
@@ -118,8 +115,7 @@ export async function submitInquiry(
     console.error("submitInquiry failed", err);
     return {
       ok: false,
-      error:
-        "Something went wrong on our end. Please try again, or reach us on WhatsApp.",
+      error: "Something went wrong on our end. Please try again, or reach us on WhatsApp.",
     };
   }
 }

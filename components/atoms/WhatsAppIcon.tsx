@@ -12,11 +12,7 @@ export interface WhatsAppIconProps extends React.SVGAttributes<SVGSVGElement> {
  * The viewBox is offset (21 12 24 24) because the icon was lifted directly
  * out of a wider source SVG without re-translating the path coordinates.
  */
-export function WhatsAppIcon({
-  size = 18,
-  className,
-  ...rest
-}: WhatsAppIconProps) {
+export function WhatsAppIcon({ size = 18, className, ...rest }: WhatsAppIconProps) {
   return (
     <svg
       width={size}

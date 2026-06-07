@@ -1,8 +1,7 @@
 import Image from "next/image";
 import { clsx } from "@/lib/clsx";
 
-export interface ThumbnailButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ThumbnailButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   active?: boolean;
   image?: string;
   alt?: string;
@@ -39,13 +38,7 @@ export function ThumbnailButton({
       {...rest}
     >
       {image ? (
-        <Image
-          src={image}
-          alt={alt ?? ""}
-          fill
-          className="object-cover"
-          sizes="96px"
-        />
+        <Image src={image} alt={alt ?? ""} fill className="object-cover" sizes="96px" />
       ) : (
         <span className="absolute inset-0 flex items-center justify-center text-[var(--fg-muted)]">
           <svg

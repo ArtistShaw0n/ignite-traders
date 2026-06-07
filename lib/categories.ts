@@ -16,10 +16,7 @@ export interface CategoryOption {
 
 /** All categories, ordered. Memoised per request so layout + page share one query. */
 export const getCategories = cache(async (): Promise<Category[]> => {
-  return db
-    .select()
-    .from(categories)
-    .orderBy(asc(categories.sortOrder), asc(categories.label));
+  return db.select().from(categories).orderBy(asc(categories.sortOrder), asc(categories.label));
 });
 
 /** Just {slug,label} — convenient for client component props. */
@@ -29,18 +26,12 @@ export async function getCategoryOptions(): Promise<CategoryOption[]> {
 }
 
 export async function getCategoryById(id: string): Promise<Category | null> {
-  const [row] = await db
-    .select()
-    .from(categories)
-    .where(eq(categories.id, id))
-    .limit(1);
+  const [row] = await db.select().from(categories).where(eq(categories.id, id)).limit(1);
   return row ?? null;
 }
 
 /** Product count per category slug — drives the admin list + delete guard. */
-export async function getProductCountsByCategory(): Promise<
-  Record<string, number>
-> {
+export async function getProductCountsByCategory(): Promise<Record<string, number>> {
   const rows = await db
     .select({
       slug: products.categorySlug,

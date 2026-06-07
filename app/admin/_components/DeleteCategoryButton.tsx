@@ -5,13 +5,7 @@ import { useRouter } from "next/navigation";
 import { Trash2 } from "lucide-react";
 import { deleteCategory } from "@/app/actions/admin-categories";
 
-export function DeleteCategoryButton({
-  id,
-  label,
-}: {
-  id: string;
-  label: string;
-}) {
+export function DeleteCategoryButton({ id, label }: { id: string; label: string }) {
   const [pending, startTransition] = useTransition();
   const router = useRouter();
 

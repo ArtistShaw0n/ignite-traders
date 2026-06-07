@@ -37,12 +37,10 @@ const sizeClass: Record<ButtonSize, string> = {
 };
 
 const variantClass: Record<ButtonVariant, string> = {
-  primary:
-    "bg-brand-500 text-white hover:bg-brand-600 active:bg-brand-700 shadow-button",
+  primary: "bg-brand-500 text-white hover:bg-brand-600 active:bg-brand-700 shadow-button",
   secondary:
     "bg-transparent text-[var(--fg-primary)] border border-[var(--border-strong)] hover:bg-[var(--bg-surface-muted)] active:bg-[var(--bg-surface)]",
-  whatsapp:
-    "bg-whatsapp-500 text-white hover:bg-whatsapp-600 active:bg-whatsapp-600",
+  whatsapp: "bg-whatsapp-500 text-white hover:bg-whatsapp-600 active:bg-whatsapp-600",
   ghost:
     "bg-transparent text-[var(--fg-primary)] hover:bg-[var(--bg-surface-muted)] active:bg-[var(--bg-surface)]",
 };
@@ -69,10 +67,7 @@ export function Button(props: ButtonProps) {
 
   const inner = (
     <>
-      {leftIcon ??
-        (variant === "whatsapp" ? (
-          <WhatsAppIcon size={whatsappIconSize(size)} />
-        ) : null)}
+      {leftIcon ?? (variant === "whatsapp" ? <WhatsAppIcon size={whatsappIconSize(size)} /> : null)}
       {children}
       {rightIcon}
     </>

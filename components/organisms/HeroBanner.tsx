@@ -37,12 +37,8 @@ export function HeroBanner({
                 + {badge}
               </span>
             )}
-            <h1 className="text-h1 tracking-tight font-bold leading-[1.1]">
-              {title}
-            </h1>
-            <p className="text-body text-white/80 leading-relaxed max-w-xl">
-              {description}
-            </p>
+            <h1 className="text-h1 tracking-tight font-bold leading-[1.1]">{title}</h1>
+            <p className="text-body text-white/80 leading-relaxed max-w-xl">{description}</p>
             <div className="flex flex-wrap gap-3 pt-1">
               {primaryCta && (
                 <Button href={primaryCta.href} variant="primary" size="md">

@@ -1,9 +1,6 @@
 import { SectionLabel } from "@/components/atoms/SectionLabel";
 import { ArrowLink } from "@/components/atoms/ArrowLink";
-import {
-  ProductCard,
-  type ProductCardProps,
-} from "@/components/molecules/ProductCard";
+import { ProductCard, type ProductCardProps } from "@/components/molecules/ProductCard";
 import { clsx } from "@/lib/clsx";
 
 export interface ProductGridSectionProps {
@@ -40,9 +37,7 @@ export function ProductGridSection({
             {label && <SectionLabel>{label}</SectionLabel>}
             <h2 className="text-h2 text-[var(--fg-primary)]">{title}</h2>
           </div>
-          {seeAllHref && (
-            <ArrowLink href={seeAllHref}>{seeAllLabel}</ArrowLink>
-          )}
+          {seeAllHref && <ArrowLink href={seeAllHref}>{seeAllLabel}</ArrowLink>}
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

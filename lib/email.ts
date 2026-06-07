@@ -32,9 +32,7 @@ function getResend(): Resend | null {
 // fall back to the default, but `??` only catches null/undefined. We hit
 // exactly this with ADMIN_EMAIL="" silently routing admin mail to nowhere.
 function getFrom(): string {
-  return (
-    process.env.RESEND_FROM_EMAIL || `${SITE_LEGAL_NAME} <no-reply@ignitetradersbd.com>`
-  );
+  return process.env.RESEND_FROM_EMAIL || `${SITE_LEGAL_NAME} <no-reply@ignitetradersbd.com>`;
 }
 
 function getAdminEmail(): string {

@@ -1,24 +1,13 @@
-import {
-  ProductGallery,
-  type ProductGalleryImage,
-} from "./ProductGallery";
-import {
-  ProductInfoCard,
-  type ProductInfoCardProps,
-} from "./ProductInfoCard";
+import { ProductGallery, type ProductGalleryImage } from "./ProductGallery";
+import { ProductInfoCard, type ProductInfoCardProps } from "./ProductInfoCard";
 import { clsx } from "@/lib/clsx";
 
-export interface ProductDetailHeroProps
-  extends Omit<ProductInfoCardProps, "className"> {
+export interface ProductDetailHeroProps extends Omit<ProductInfoCardProps, "className"> {
   images?: ProductGalleryImage[];
   className?: string;
 }
 
-export function ProductDetailHero({
-  images,
-  className,
-  ...infoProps
-}: ProductDetailHeroProps) {
+export function ProductDetailHero({ images, className, ...infoProps }: ProductDetailHeroProps) {
   return (
     <section className={clsx("section-pad-sm", className)}>
       <div className="container-site">

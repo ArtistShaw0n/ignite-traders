@@ -113,11 +113,7 @@ export async function updateCategory(
     };
 
   try {
-    const [old] = await db
-      .select()
-      .from(categories)
-      .where(eq(categories.id, id))
-      .limit(1);
+    const [old] = await db.select().from(categories).where(eq(categories.id, id)).limit(1);
 
     await db
       .update(categories)
@@ -150,17 +146,11 @@ export async function updateCategory(
   redirect("/admin/categories");
 }
 
-export async function deleteCategory(
-  id: string,
-): Promise<{ ok: boolean; error?: string }> {
+export async function deleteCategory(id: string): Promise<{ ok: boolean; error?: string }> {
   await requireAdmin();
 
   try {
-    const [cat] = await db
-      .select()
-      .from(categories)
-      .where(eq(categories.id, id))
-      .limit(1);
+    const [cat] = await db.select().from(categories).where(eq(categories.id, id)).limit(1);
     if (!cat) return { ok: false, error: "Category not found." };
 
     const [{ count }] = await db

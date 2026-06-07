@@ -53,19 +53,13 @@ export default async function InquiryDetailPage({ params }: PageProps) {
       {/* Contact + request details */}
       <dl className="mt-8 grid gap-x-8 gap-y-5 rounded-xl border border-[var(--border-default)] bg-white p-6 sm:grid-cols-2">
         <Field label="Email">
-          <a
-            href={`mailto:${inquiry.email}`}
-            className="text-brand-600 hover:underline"
-          >
+          <a href={`mailto:${inquiry.email}`} className="text-brand-600 hover:underline">
             {inquiry.email}
           </a>
         </Field>
         <Field label="Phone">
           {inquiry.phone ? (
-            <a
-              href={`tel:${inquiry.phone}`}
-              className="text-brand-600 hover:underline"
-            >
+            <a href={`tel:${inquiry.phone}`} className="text-brand-600 hover:underline">
               {inquiry.phone}
             </a>
           ) : (
@@ -98,9 +92,7 @@ export default async function InquiryDetailPage({ params }: PageProps) {
         <h2 className="text-caption font-semibold uppercase tracking-wide text-[var(--fg-muted)]">
           Message
         </h2>
-        <p className="mt-3 whitespace-pre-wrap text-body leading-relaxed">
-          {inquiry.message}
-        </p>
+        <p className="mt-3 whitespace-pre-wrap text-body leading-relaxed">{inquiry.message}</p>
       </div>
 
       {/* Email log */}
@@ -142,13 +134,7 @@ export default async function InquiryDetailPage({ params }: PageProps) {
   );
 }
 
-function Field({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
       <dt className="text-caption font-semibold uppercase tracking-wide text-[var(--fg-muted)]">

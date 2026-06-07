@@ -25,9 +25,7 @@ export function ProductSpecRow({
       <dd
         className={clsx(
           "text-body-sm font-semibold",
-          highlight
-            ? "text-success-600 dark:text-success-400"
-            : "text-[var(--fg-primary)]",
+          highlight ? "text-success-600 dark:text-success-400" : "text-[var(--fg-primary)]",
         )}
       >
         {value}

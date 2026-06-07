@@ -4,13 +4,7 @@
  * so client components — e.g. the status-update dropdown — can import the
  * list, labels, and type without pulling the server bundle.
  */
-export const INQUIRY_STATUSES = [
-  "new",
-  "replied",
-  "quoted",
-  "won",
-  "lost",
-] as const;
+export const INQUIRY_STATUSES = ["new", "replied", "quoted", "won", "lost"] as const;
 
 export type InquiryStatus = (typeof INQUIRY_STATUSES)[number];
 

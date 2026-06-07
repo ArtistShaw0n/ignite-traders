@@ -1,7 +1,6 @@
 import { clsx } from "@/lib/clsx";
 
-export interface FilterPillProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface FilterPillProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   active?: boolean;
 }
 

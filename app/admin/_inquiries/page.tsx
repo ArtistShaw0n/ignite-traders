@@ -2,11 +2,7 @@ import Link from "next/link";
 import { Download } from "lucide-react";
 import { requireAdmin } from "@/lib/auth";
 import { getInquiries, getInquiryStatusCounts } from "@/lib/inquiries";
-import {
-  INQUIRY_STATUSES,
-  INQUIRY_STATUS_LABELS,
-  type InquiryStatus,
-} from "@/lib/inquiry-status";
+import { INQUIRY_STATUSES, INQUIRY_STATUS_LABELS, type InquiryStatus } from "@/lib/inquiry-status";
 import { formatDateTime } from "@/lib/format";
 import { clsx } from "@/lib/clsx";
 import { StatusBadge } from "@/app/admin/_components/StatusBadge";
@@ -101,9 +97,7 @@ export default async function InquiriesPage({ searchParams }: PageProps) {
                   </Td>
                   <Td>
                     <span className="font-semibold">{r.name}</span>
-                    <span className="block text-caption text-[var(--fg-muted)]">
-                      {r.email}
-                    </span>
+                    <span className="block text-caption text-[var(--fg-muted)]">{r.email}</span>
                   </Td>
                   <Td>{r.company ?? "—"}</Td>
                   <Td>{r.productTitle ?? "—"}</Td>
@@ -162,22 +156,10 @@ function FilterPill({
   );
 }
 
-function Th({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
+function Th({ children, className }: { children: React.ReactNode; className?: string }) {
   return <th className={clsx("px-4 py-3 font-semibold", className)}>{children}</th>;
 }
 
-function Td({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
+function Td({ children, className }: { children: React.ReactNode; className?: string }) {
   return <td className={clsx("px-4 py-3 align-top", className)}>{children}</td>;
 }

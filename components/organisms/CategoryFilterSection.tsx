@@ -46,11 +46,7 @@ export function CategoryFilterSection({
         </div>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
           {categories.map((cat) => (
-            <FilterPill
-              key={cat}
-              active={cat === active}
-              onClick={() => handleClick(cat)}
-            >
+            <FilterPill key={cat} active={cat === active} onClick={() => handleClick(cat)}>
               {cat}
             </FilterPill>
           ))}

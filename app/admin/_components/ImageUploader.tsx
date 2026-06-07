@@ -55,9 +55,7 @@ export function ImageUploader({
 
   return (
     <div>
-      <span className="text-body-sm font-semibold text-[var(--fg-primary)]">
-        Images
-      </span>
+      <span className="text-body-sm font-semibold text-[var(--fg-primary)]">Images</span>
 
       <div className="mt-2 flex flex-wrap gap-3">
         {value.map((img, i) => (
@@ -65,13 +63,7 @@ export function ImageUploader({
             key={img.url}
             className="group relative h-24 w-24 overflow-hidden rounded-md border border-[var(--border-default)] bg-[var(--bg-surface-muted)]"
           >
-            <Image
-              src={img.url}
-              alt={img.alt ?? ""}
-              fill
-              className="object-cover"
-              sizes="96px"
-            />
+            <Image src={img.url} alt={img.alt ?? ""} fill className="object-cover" sizes="96px" />
             {i === 0 && (
               <span className="absolute bottom-0 left-0 right-0 bg-black/60 py-0.5 text-center text-[10px] font-semibold text-white">
                 Thumbnail
@@ -114,8 +106,7 @@ export function ImageUploader({
 
       {error && <p className="mt-1.5 text-caption text-red-600">{error}</p>}
       <p className="mt-1.5 text-caption text-[var(--fg-muted)]">
-        PNG / JPG / WebP, up to 4MB each. The first image is used as the card
-        thumbnail.
+        PNG / JPG / WebP, up to 4MB each. The first image is used as the card thumbnail.
       </p>
     </div>
   );

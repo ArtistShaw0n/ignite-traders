@@ -24,10 +24,7 @@ export function Pagination({
   const canNext = currentPage < totalPages;
 
   return (
-    <nav
-      aria-label="Pagination"
-      className={clsx("flex items-center gap-1.5", className)}
-    >
+    <nav aria-label="Pagination" className={clsx("flex items-center gap-1.5", className)}>
       <PageButton
         ariaLabel="Previous page"
         disabled={!canPrev}
@@ -38,11 +35,7 @@ export function Pagination({
 
       {pages.map((p, i) =>
         p === "…" ? (
-          <span
-            key={`gap-${i}`}
-            aria-hidden="true"
-            className="px-2 text-[var(--fg-muted)]"
-          >
+          <span key={`gap-${i}`} aria-hidden="true" className="px-2 text-[var(--fg-muted)]">
             …
           </span>
         ) : (
@@ -104,11 +97,7 @@ function PageButton({
   );
 }
 
-function buildPageList(
-  current: number,
-  total: number,
-  siblingCount: number,
-): (number | "…")[] {
+function buildPageList(current: number, total: number, siblingCount: number): (number | "…")[] {
   // Always include first and last, current, and sibling range.
   const totalSlots = siblingCount * 2 + 5; // first + last + current + 2 ellipses + siblings
   if (total <= totalSlots) {

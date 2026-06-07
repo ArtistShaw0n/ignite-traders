@@ -32,10 +32,7 @@ export { HeroBanner } from "./HeroBanner";
 export type { HeroBannerProps } from "./HeroBanner";
 
 export { IndustriesSection } from "./IndustriesSection";
-export type {
-  IndustriesSectionProps,
-  IndustriesSectionItem,
-} from "./IndustriesSection";
+export type { IndustriesSectionProps, IndustriesSectionItem } from "./IndustriesSection";
 
 export { PageHeader } from "./PageHeader";
 export type { PageHeaderProps } from "./PageHeader";

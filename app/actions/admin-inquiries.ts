@@ -7,9 +7,7 @@ import { inquiries } from "@/db/schema";
 import { requireAdmin } from "@/lib/auth";
 import { INQUIRY_STATUSES, type InquiryStatus } from "@/lib/inquiry-status";
 
-export type UpdateStatusResult =
-  | { ok: true; status: InquiryStatus }
-  | { ok: false; error: string };
+export type UpdateStatusResult = { ok: true; status: InquiryStatus } | { ok: false; error: string };
 
 /**
  * Admin-only — move an inquiry through its pipeline
@@ -18,10 +16,7 @@ export type UpdateStatusResult =
  * requireAdmin() runs first: a non-admin caller is redirected before any
  * DB write can happen, so this is safe to import into client components.
  */
-export async function updateInquiryStatus(
-  id: string,
-  status: string,
-): Promise<UpdateStatusResult> {
+export async function updateInquiryStatus(id: string, status: string): Promise<UpdateStatusResult> {
   await requireAdmin();
 
   if (!INQUIRY_STATUSES.includes(status as InquiryStatus)) {

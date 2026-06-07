@@ -39,9 +39,7 @@ export async function GET() {
   const lines = [
     COLUMNS.map((c) => csvCell(c.header)).join(","),
     ...rows.map((row) =>
-      COLUMNS.map((c) => csvCell((row as Record<string, unknown>)[c.key])).join(
-        ",",
-      ),
+      COLUMNS.map((c) => csvCell((row as Record<string, unknown>)[c.key])).join(","),
     ),
   ];
   // Prepend a UTF-8 BOM so Excel opens it with correct encoding.

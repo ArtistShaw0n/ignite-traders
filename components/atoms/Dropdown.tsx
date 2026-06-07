@@ -31,9 +31,7 @@ export function Dropdown({
   buttonClassName,
 }: DropdownProps) {
   const [open, setOpen] = useState(false);
-  const [internal, setInternal] = useState<string | undefined>(
-    defaultValue ?? value,
-  );
+  const [internal, setInternal] = useState<string | undefined>(defaultValue ?? value);
   const rootRef = useRef<HTMLDivElement>(null);
 
   const selectedValue = value ?? internal;
@@ -77,9 +75,7 @@ export function Dropdown({
       >
         <span className="truncate">
           {label ? <span className="text-[var(--fg-muted)]">{label}: </span> : null}
-          <span className="font-medium">
-            {selected ? selected.label : placeholder}
-          </span>
+          <span className="font-medium">{selected ? selected.label : placeholder}</span>
         </span>
         <ChevronDown
           size={16}

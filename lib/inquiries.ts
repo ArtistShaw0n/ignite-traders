@@ -44,19 +44,13 @@ export async function getInquiries(opts?: {
 }): Promise<InquiryWithProduct[]> {
   const base = selectWithProduct();
   const rows = opts?.status
-    ? await base
-        .where(eq(inquiries.status, opts.status))
-        .orderBy(desc(inquiries.createdAt))
+    ? await base.where(eq(inquiries.status, opts.status)).orderBy(desc(inquiries.createdAt))
     : await base.orderBy(desc(inquiries.createdAt));
   return rows as InquiryWithProduct[];
 }
 
-export async function getInquiryById(
-  id: string,
-): Promise<InquiryWithProduct | null> {
-  const [row] = await selectWithProduct()
-    .where(eq(inquiries.id, id))
-    .limit(1);
+export async function getInquiryById(id: string): Promise<InquiryWithProduct | null> {
+  const [row] = await selectWithProduct().where(eq(inquiries.id, id)).limit(1);
   return (row as InquiryWithProduct | undefined) ?? null;
 }
 
@@ -88,9 +82,7 @@ export async function getInquiryStatusCounts(): Promise<
 }
 
 /** Inquiry counts grouped by lead source — drives the Phase 10 breakdown. */
-export async function getInquirySourceCounts(): Promise<
-  { source: string; count: number }[]
-> {
+export async function getInquirySourceCounts(): Promise<{ source: string; count: number }[]> {
   const rows = await db
     .select({
       source: inquiries.source,
@@ -103,9 +95,7 @@ export async function getInquirySourceCounts(): Promise<
   return rows.map((r) => ({ source: r.source ?? "unknown", count: r.count }));
 }
 
-export async function getEmailLogForInquiry(
-  inquiryId: string,
-): Promise<EmailLog[]> {
+export async function getEmailLogForInquiry(inquiryId: string): Promise<EmailLog[]> {
   return db
     .select()
     .from(emailLog)
@@ -114,11 +104,7 @@ export async function getEmailLogForInquiry(
 }
 
 /** Most-recent inquiries for the dashboard landing. */
-export async function getRecentInquiries(
-  limit = 5,
-): Promise<InquiryWithProduct[]> {
-  const rows = await selectWithProduct()
-    .orderBy(desc(inquiries.createdAt))
-    .limit(limit);
+export async function getRecentInquiries(limit = 5): Promise<InquiryWithProduct[]> {
+  const rows = await selectWithProduct().orderBy(desc(inquiries.createdAt)).limit(limit);
   return rows as InquiryWithProduct[];
 }

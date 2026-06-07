@@ -42,11 +42,7 @@ export function FaqSection({
         <div className="text-center space-y-3 max-w-2xl mx-auto">
           <SectionLabel>{label}</SectionLabel>
           <h2 className="text-h2 text-[var(--fg-primary)]">{title}</h2>
-          {description && (
-            <p className="text-body text-[var(--fg-secondary)]">
-              {description}
-            </p>
-          )}
+          {description && <p className="text-body text-[var(--fg-secondary)]">{description}</p>}
         </div>
 
         <div className="max-w-3xl mx-auto space-y-3">
