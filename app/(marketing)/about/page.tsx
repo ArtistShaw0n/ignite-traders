@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "About Us",
   description:
     "A Dhaka-based B2B supplier of protective wear and safety items, focused on the consistent, reliable supply that pharmaceutical production needs.",
+  alternates: { canonical: "/about" },
 };
 
 export default function AboutPage() {

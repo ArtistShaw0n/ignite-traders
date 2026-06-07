@@ -42,6 +42,7 @@ export function organizationJsonLd() {
 
 /** Product JSON-LD — used in product detail pages. */
 export function productJsonLd(product: Product) {
+  const images = product.images.map((i) => i.url).filter(Boolean);
   return {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -51,18 +52,12 @@ export function productJsonLd(product: Product) {
     category: product.categoryLabel,
     material: product.material,
     url: `${SITE_URL}/products/${product.slug}`,
+    ...(images.length ? { image: images } : {}),
     brand: {
       "@type": "Brand",
       name: SITE_NAME,
     },
-    offers: {
-      "@type": "Offer",
-      availability: "https://schema.org/InStock",
-      priceCurrency: "BDT",
-      seller: {
-        "@type": "Organization",
-        name: SITE_LEGAL_NAME,
-      },
-    },
+    // No `offers` block: this is a quote-based B2B catalog with no public
+    // price, and an Offer without a price is invalid structured data.
   };
 }
