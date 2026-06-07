@@ -1,11 +1,5 @@
-import {
-  Building2,
-  FlaskConical,
-  Package,
-  Phone,
-  ShieldCheck,
-  Truck,
-} from "lucide-react";
+import { Building2, FlaskConical, Package, Phone, ShieldCheck, Truck } from "lucide-react";
+import { notFound } from "next/navigation";
 import {
   ArrowLink,
   Badge,
@@ -30,15 +24,15 @@ import {
   ProductSpecRow,
   WhatsAppCTA,
 } from "@/components/molecules";
-import {
-  PaginationDemo,
-  ThumbnailGalleryDemo,
-} from "./_design-demos/InteractiveDemos";
+import { PaginationDemo, ThumbnailGalleryDemo } from "./_design-demos/InteractiveDemos";
 
 // Module-level constant — Date.now() outside render to keep the page pure.
 const DEMO_OFFER_END = new Date(Date.now() + 23 * 24 * 60 * 60 * 1000);
 
 export default function DesignSystemPreview() {
+  // Dev-only component gallery — hidden in production.
+  if (process.env.VERCEL_ENV === "production") notFound();
+
   return (
     <main className="container-site section-pad space-y-16">
       {/* Header bar with theme toggle */}
@@ -49,8 +43,8 @@ export default function DesignSystemPreview() {
             IGNITE Design System
           </h1>
           <p className="text-body-lg text-[var(--fg-secondary)] max-w-2xl">
-            Foundational tokens — colors, typography, spacing, radius, shadows.
-            Light + dark mode, mobile + tablet + desktop responsive.
+            Foundational tokens — colors, typography, spacing, radius, shadows. Light + dark mode,
+            mobile + tablet + desktop responsive.
           </p>
         </div>
         <ThemeToggle />
@@ -149,9 +143,7 @@ export default function DesignSystemPreview() {
 
         {/* Semantic tokens */}
         <div className="space-y-3">
-          <h3 className="text-h4 text-[var(--fg-primary)]">
-            Semantic tokens (theme-aware)
-          </h3>
+          <h3 className="text-h4 text-[var(--fg-primary)]">Semantic tokens (theme-aware)</h3>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <SemanticSwatch label="bg-page" varName="--bg-page" />
             <SemanticSwatch label="bg-surface" varName="--bg-surface" />
@@ -165,42 +157,57 @@ export default function DesignSystemPreview() {
 
       {/* Badges — 9 variants */}
       <section className="space-y-6">
-        <h2 className="text-h2 text-[var(--fg-primary)]">
-          Badges — 3 styles × 3 colors
-        </h2>
+        <h2 className="text-h2 text-[var(--fg-primary)]">Badges — 3 styles × 3 colors</h2>
         <p className="text-body text-[var(--fg-secondary)]">
           Solid (filled), Soft (light tinted), Outline (stroke, no fill).
         </p>
 
         <div className="grid gap-6 md:grid-cols-3">
           <BadgeStyleColumn title="Solid">
-            <Badge color="bestseller" variant="solid">Bestseller</Badge>
-            <Badge color="bulk" variant="solid">Bulk</Badge>
-            <Badge color="new" variant="solid">New</Badge>
+            <Badge color="bestseller" variant="solid">
+              Bestseller
+            </Badge>
+            <Badge color="bulk" variant="solid">
+              Bulk
+            </Badge>
+            <Badge color="new" variant="solid">
+              New
+            </Badge>
           </BadgeStyleColumn>
 
           <BadgeStyleColumn title="Soft (light bg)">
-            <Badge color="bestseller" variant="soft">Bestseller</Badge>
-            <Badge color="bulk" variant="soft">Bulk</Badge>
-            <Badge color="new" variant="soft">New</Badge>
+            <Badge color="bestseller" variant="soft">
+              Bestseller
+            </Badge>
+            <Badge color="bulk" variant="soft">
+              Bulk
+            </Badge>
+            <Badge color="new" variant="soft">
+              New
+            </Badge>
           </BadgeStyleColumn>
 
           <BadgeStyleColumn title="Outline (stroke)">
-            <Badge color="bestseller" variant="outline">Bestseller</Badge>
-            <Badge color="bulk" variant="outline">Bulk</Badge>
-            <Badge color="new" variant="outline">New</Badge>
+            <Badge color="bestseller" variant="outline">
+              Bestseller
+            </Badge>
+            <Badge color="bulk" variant="outline">
+              Bulk
+            </Badge>
+            <Badge color="new" variant="outline">
+              New
+            </Badge>
           </BadgeStyleColumn>
         </div>
       </section>
 
       {/* Responsive Typography */}
       <section className="space-y-6">
-        <h2 className="text-h2 text-[var(--fg-primary)]">
-          Typography — responsive scale
-        </h2>
+        <h2 className="text-h2 text-[var(--fg-primary)]">Typography — responsive scale</h2>
         <p className="text-body text-[var(--fg-secondary)]">
-          Sizes auto-adjust at <code className="text-brand-600 dark:text-brand-400">md (768px)</code>{" "}
-          and <code className="text-brand-600 dark:text-brand-400">lg (1024px)</code> breakpoints.
+          Sizes auto-adjust at{" "}
+          <code className="text-brand-600 dark:text-brand-400">md (768px)</code> and{" "}
+          <code className="text-brand-600 dark:text-brand-400">lg (1024px)</code> breakpoints.
         </p>
 
         <div className="space-y-4 rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-6">
@@ -280,8 +287,8 @@ export default function DesignSystemPreview() {
         <h2 className="text-h2 text-[var(--fg-primary)]">Container</h2>
         <p className="text-body text-[var(--fg-secondary)]">
           Max width: <code className="text-brand-600 dark:text-brand-400">1280px</code> · Class:{" "}
-          <code className="text-brand-600 dark:text-brand-400">.container-site</code> ·
-          Responsive padding: 16 / 24 / 32 px
+          <code className="text-brand-600 dark:text-brand-400">.container-site</code> · Responsive
+          padding: 16 / 24 / 32 px
         </p>
       </section>
 
@@ -290,12 +297,10 @@ export default function DesignSystemPreview() {
           ============================================ */}
       <section className="pt-12 border-t border-[var(--border-default)]">
         <SectionLabel>Phase 2 — Atoms</SectionLabel>
-        <h2 className="text-h1 text-[var(--fg-primary)] mt-3">
-          Reusable building blocks
-        </h2>
+        <h2 className="text-h1 text-[var(--fg-primary)] mt-3">Reusable building blocks</h2>
         <p className="text-body-lg text-[var(--fg-secondary)] max-w-2xl mt-2">
-          8 atoms — the smallest reusable components. Every molecule and
-          organism is built from these.
+          8 atoms — the smallest reusable components. Every molecule and organism is built from
+          these.
         </p>
       </section>
 
@@ -365,15 +370,33 @@ export default function DesignSystemPreview() {
         description="9 variants: 3 colors (bestseller/bulk/new) × 3 styles (solid/soft/outline)."
       >
         <div className="flex flex-wrap gap-3">
-          <Badge color="bestseller" variant="solid">Bestseller</Badge>
-          <Badge color="bulk" variant="solid">Bulk</Badge>
-          <Badge color="new" variant="solid">New</Badge>
-          <Badge color="bestseller" variant="soft">Bestseller</Badge>
-          <Badge color="bulk" variant="soft">Bulk</Badge>
-          <Badge color="new" variant="soft">New</Badge>
-          <Badge color="bestseller" variant="outline">Bestseller</Badge>
-          <Badge color="bulk" variant="outline">Bulk</Badge>
-          <Badge color="new" variant="outline">New</Badge>
+          <Badge color="bestseller" variant="solid">
+            Bestseller
+          </Badge>
+          <Badge color="bulk" variant="solid">
+            Bulk
+          </Badge>
+          <Badge color="new" variant="solid">
+            New
+          </Badge>
+          <Badge color="bestseller" variant="soft">
+            Bestseller
+          </Badge>
+          <Badge color="bulk" variant="soft">
+            Bulk
+          </Badge>
+          <Badge color="new" variant="soft">
+            New
+          </Badge>
+          <Badge color="bestseller" variant="outline">
+            Bestseller
+          </Badge>
+          <Badge color="bulk" variant="outline">
+            Bulk
+          </Badge>
+          <Badge color="new" variant="outline">
+            New
+          </Badge>
         </div>
       </AtomBlock>
 
@@ -422,7 +445,12 @@ export default function DesignSystemPreview() {
             </p>
             <div className="flex flex-wrap gap-3 p-6 rounded-lg bg-ink-900">
               <Button variant="primary">Primary CTA</Button>
-              <Button variant="secondary" className="!text-white !border-white/30 hover:!bg-white/10">Secondary</Button>
+              <Button
+                variant="secondary"
+                className="!text-white !border-white/30 hover:!bg-white/10"
+              >
+                Secondary
+              </Button>
               <Button variant="whatsapp">WhatsApp</Button>
             </div>
           </div>
@@ -554,9 +582,7 @@ export default function DesignSystemPreview() {
           ============================================ */}
       <section className="pt-12 border-t border-[var(--border-default)]">
         <SectionLabel>Phase 3 — Molecules</SectionLabel>
-        <h2 className="text-h1 text-[var(--fg-primary)] mt-3">
-          Composite UI components
-        </h2>
+        <h2 className="text-h1 text-[var(--fg-primary)] mt-3">Composite UI components</h2>
         <p className="text-body-lg text-[var(--fg-secondary)] max-w-2xl mt-2">
           11 molecules — built from atoms, ready to be assembled into organisms.
         </p>
@@ -606,10 +632,7 @@ export default function DesignSystemPreview() {
         <div className="space-y-6">
           <VariantBlock label="Variant: default · left-aligned">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <IndustryCard
-                name="Pharmaceutical Manufacturing"
-                icon={<ShieldCheck size={20} />}
-              />
+              <IndustryCard name="Pharmaceutical Manufacturing" icon={<ShieldCheck size={20} />} />
               <IndustryCard name="Production Industry" icon={<Building2 size={20} />} />
               <IndustryCard name="Packaging Industry" icon={<Package size={20} />} />
             </div>
@@ -835,10 +858,7 @@ export default function DesignSystemPreview() {
               On brand (orange banner)
             </p>
             <div className="p-5 rounded-lg bg-brand-500 inline-block">
-              <CountdownTimer
-                targetDate={DEMO_OFFER_END}
-                tone="onBrand"
-              />
+              <CountdownTimer targetDate={DEMO_OFFER_END} tone="onBrand" />
             </div>
           </div>
           <div>
@@ -863,11 +883,7 @@ export default function DesignSystemPreview() {
             label="Usage area"
             value="Pharmaceutical, food processing, hospital & laboratory"
           />
-          <ProductSpecRow
-            label="Bulk supply"
-            value="Available — MOQ on request"
-            highlight
-          />
+          <ProductSpecRow label="Bulk supply" value="Available — MOQ on request" highlight />
         </dl>
       </AtomBlock>
 
@@ -880,10 +896,7 @@ export default function DesignSystemPreview() {
       </AtomBlock>
 
       {/* AboutBlock */}
-      <AtomBlock
-        name="AboutBlock"
-        description="Heading + body paragraph. Used 5x on About page."
-      >
+      <AtomBlock name="AboutBlock" description="Heading + body paragraph. Used 5x on About page.">
         <div className="space-y-6 max-w-3xl">
           <AboutBlock
             heading="Who we are"
@@ -926,17 +939,15 @@ export default function DesignSystemPreview() {
           ============================================ */}
       <section className="pt-12 border-t border-[var(--border-default)]">
         <SectionLabel>Phase 4 — Organisms</SectionLabel>
-        <h2 className="text-h1 text-[var(--fg-primary)] mt-3">
-          Full page sections
-        </h2>
+        <h2 className="text-h1 text-[var(--fg-primary)] mt-3">Full page sections</h2>
         <p className="text-body-lg text-[var(--fg-secondary)] max-w-2xl mt-2">
-          19 organisms — layout (Header, Footer, Breadcrumb, PageHeader) +
-          home-page sections (HeroBanner, ProductGridSection, IndustriesSection,
-          WhyChooseSection, etc.) + product-detail + about + contact sections.
+          19 organisms — layout (Header, Footer, Breadcrumb, PageHeader) + home-page sections
+          (HeroBanner, ProductGridSection, IndustriesSection, WhyChooseSection, etc.) +
+          product-detail + about + contact sections.
         </p>
         <p className="text-body-lg text-[var(--fg-secondary)] mt-4">
-          Organisms render at full viewport width — they don&apos;t fit in a card
-          showcase. View them in their natural environment:
+          Organisms render at full viewport width — they don&apos;t fit in a card showcase. View
+          them in their natural environment:
         </p>
         <div className="mt-6">
           <Button href="/preview/organisms" size="lg">
@@ -947,8 +958,8 @@ export default function DesignSystemPreview() {
 
       <footer className="pt-12 border-t border-[var(--border-default)]">
         <p className="text-body-sm text-[var(--fg-muted)]">
-          Phases 1–4 complete · Next: Phase 5 — Page Assembly (real Home,
-          Products, Product Detail, About, Contact pages)
+          Phases 1–4 complete · Next: Phase 5 — Page Assembly (real Home, Products, Product Detail,
+          About, Contact pages)
         </p>
       </footer>
     </main>
@@ -986,19 +997,10 @@ function ColorGroup({
   );
 }
 
-function SemanticSwatch({
-  label,
-  varName,
-}: {
-  label: string;
-  varName: string;
-}) {
+function SemanticSwatch({ label, varName }: { label: string; varName: string }) {
   return (
     <div className="rounded-md border border-[var(--border-default)] overflow-hidden">
-      <div
-        className="h-14 w-full"
-        style={{ background: `var(${varName})` }}
-      />
+      <div className="h-14 w-full" style={{ background: `var(${varName})` }} />
       <div className="px-3 py-2 bg-[var(--bg-surface)]">
         <code className="text-body-sm text-[var(--fg-primary)]">{label}</code>
       </div>
@@ -1006,13 +1008,7 @@ function SemanticSwatch({
   );
 }
 
-function BadgeStyleColumn({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
+function BadgeStyleColumn({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-5 space-y-3">
       <p className="text-caption font-semibold uppercase tracking-wider text-[var(--fg-muted)]">
@@ -1023,15 +1019,7 @@ function BadgeStyleColumn({
   );
 }
 
-function TypeRow({
-  label,
-  specs,
-  className,
-}: {
-  label: string;
-  specs: string;
-  className: string;
-}) {
+function TypeRow({ label, specs, className }: { label: string; specs: string; className: string }) {
   return (
     <div className="flex items-baseline gap-4 flex-wrap py-2 border-b border-[var(--border-muted)] last:border-0">
       <div className="flex-shrink-0 w-32">
@@ -1045,17 +1033,7 @@ function TypeRow({
   );
 }
 
-function SpacingRow({
-  cls,
-  m,
-  t,
-  d,
-}: {
-  cls: string;
-  m: string;
-  t: string;
-  d: string;
-}) {
+function SpacingRow({ cls, m, t, d }: { cls: string; m: string; t: string; d: string }) {
   return (
     <tr>
       <td className="px-4 py-3">
@@ -1068,13 +1046,7 @@ function SpacingRow({
   );
 }
 
-function RadiusBox({
-  label,
-  className,
-}: {
-  label: string;
-  className: string;
-}) {
+function RadiusBox({ label, className }: { label: string; className: string }) {
   return (
     <div className="flex flex-col items-center gap-2">
       <div className={`w-20 h-20 sm:w-24 sm:h-24 bg-brand-500 ${className}`} />
@@ -1083,13 +1055,7 @@ function RadiusBox({
   );
 }
 
-function ShadowBox({
-  label,
-  className,
-}: {
-  label: string;
-  className: string;
-}) {
+function ShadowBox({ label, className }: { label: string; className: string }) {
   return (
     <div className="flex flex-col items-center gap-2">
       <div
@@ -1113,9 +1079,7 @@ function AtomBlock({
     <section className="space-y-4 rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-6 md:p-8">
       <header className="space-y-1">
         <h3 className="text-h3 text-[var(--fg-primary)]">
-          <code className="text-brand-600 dark:text-brand-400">
-            &lt;{name} /&gt;
-          </code>
+          <code className="text-brand-600 dark:text-brand-400">&lt;{name} /&gt;</code>
         </h3>
         <p className="text-body-sm text-[var(--fg-secondary)]">{description}</p>
       </header>
@@ -1124,13 +1088,7 @@ function AtomBlock({
   );
 }
 
-function VariantBlock({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
+function VariantBlock({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="space-y-3">
       <p className="text-caption font-semibold uppercase tracking-wider text-[var(--fg-muted)]">
@@ -1140,4 +1098,3 @@ function VariantBlock({
     </div>
   );
 }
-

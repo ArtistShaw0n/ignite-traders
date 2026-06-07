@@ -36,7 +36,6 @@ function buildNav(categories: { slug: string; label: string }[]): NavLink[] {
           }))
         : undefined,
     },
-    { label: "Design System", href: "/design-system" },
   ];
 }
 

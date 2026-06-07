@@ -19,23 +19,23 @@ export default function AboutPage() {
         blocks={[
           {
             heading: "Who we are",
-            body: "IGNITE Traders is a Dhaka-based B2B supplier built specifically for the procurement needs of pharmaceutical production lines, packaging facilities, food processing units, and clinical laboratories. [TODO replace verbatim]",
+            body: "IGNITE Traders is a Dhaka-based B2B supplier built specifically for the procurement needs of pharmaceutical production lines, packaging facilities, food processing units, and clinical laboratories.",
           },
           {
             heading: "What we focus on",
-            body: "Hygiene-sensitive supply chains where consistency, batch quality, and predictable lead times matter more than retail-style variety. We stock the working-line essentials — gowns, head and shoe covers, gloves, safety footwear, goggles and masks — in volumes tuned to recurring B2B demand. [TODO replace verbatim]",
+            body: "Hygiene-sensitive supply chains where consistency, batch quality, and predictable lead times matter more than retail-style variety. We stock the working-line essentials — gowns, head and shoe covers, gloves, safety footwear, goggles and masks — in volumes tuned to recurring B2B demand.",
           },
           {
             heading: "Industry specialisation",
-            body: "Our customer base is concentrated in pharmaceutical manufacturing and adjacent production environments. That focus shapes our material choices (non-woven polypropylene, SMS, nitrile, polycarbonate) and how we screen upstream suppliers. [TODO replace verbatim]",
+            body: "Our customer base is concentrated in pharmaceutical manufacturing and adjacent production environments. That focus shapes our material choices (non-woven polypropylene, SMS, nitrile, polycarbonate) and how we screen upstream suppliers.",
           },
           {
             heading: "Commitment to quality and timely delivery",
-            body: "Every batch is checked against documented specs before dispatch. We invest in predictability over breadth — if a SKU is in our catalogue, we keep enough stock to fulfil repeat orders without surprises. [TODO replace verbatim]",
+            body: "Every batch is checked against documented specs before dispatch. We invest in predictability over breadth — if a SKU is in our catalogue, we keep enough stock to fulfil repeat orders without surprises.",
           },
           {
             heading: "Our values",
-            body: "Direct human communication, transparent quoting, and lead times you can plan around. We do not chase retail customers and we do not bid for one-off contracts that we cannot sustain. [TODO replace verbatim]",
+            body: "Direct human communication, transparent quoting, and lead times you can plan around. We do not chase retail customers and we do not bid for one-off contracts that we cannot sustain.",
           },
         ]}
       />

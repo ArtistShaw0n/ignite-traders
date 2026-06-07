@@ -1,10 +1,5 @@
-import {
-  Building2,
-  FlaskConical,
-  Hospital,
-  Package,
-  ShieldCheck,
-} from "lucide-react";
+import { Building2, FlaskConical, Hospital, Package, ShieldCheck } from "lucide-react";
+import { notFound } from "next/navigation";
 import {
   AboutContent,
   Breadcrumb,
@@ -62,6 +57,9 @@ const WHATSAPP = "8801798214677";
 const FUTURE_DATE = new Date(Date.now() + 23 * 24 * 60 * 60 * 1000);
 
 export default function OrganismsPreview() {
+  // Dev-only preview — hidden in production.
+  if (process.env.VERCEL_ENV === "production") notFound();
+
   return (
     <>
       <Header phone={PHONE} whatsapp={WHATSAPP} />
@@ -151,26 +149,22 @@ export default function OrganismsPreview() {
             {
               number: "03",
               title: "Reliable sourcing",
-              description:
-                "Vetted upstream suppliers and consistent stock for repeat orders.",
+              description: "Vetted upstream suppliers and consistent stock for repeat orders.",
             },
             {
               number: "04",
               title: "Quality consistency",
-              description:
-                "Each batch checked against documented specs before dispatch.",
+              description: "Each batch checked against documented specs before dispatch.",
             },
             {
               number: "05",
               title: "Responsive communication",
-              description:
-                "Quotation responses in hours, not days. Direct line to a real human.",
+              description: "Quotation responses in hours, not days. Direct line to a real human.",
             },
             {
               number: "06",
               title: "Bulk order support",
-              description:
-                "Comfortable with one-time bulk and ongoing recurring supply.",
+              description: "Comfortable with one-time bulk and ongoing recurring supply.",
             },
           ]}
         />
@@ -203,10 +197,7 @@ export default function OrganismsPreview() {
         <PageHeader
           title="Browse our products"
           description="Industrial supplies, PPE, electrical components — sourced and stocked for fast dispatch. Filter by category or search for specific items."
-          breadcrumb={[
-            { label: "Home", href: "/" },
-            { label: "Products" },
-          ]}
+          breadcrumb={[{ label: "Home", href: "/" }, { label: "Products" }]}
         />
 
         <div className="container-site">
@@ -261,10 +252,7 @@ export default function OrganismsPreview() {
         <PageHeader
           title="About IGNITE"
           description="A Dhaka-based B2B supplier of protective wear and safety items, focused on the consistent, reliable supply that pharmaceutical production needs."
-          breadcrumb={[
-            { label: "Home", href: "/" },
-            { label: "About Us" },
-          ]}
+          breadcrumb={[{ label: "Home", href: "/" }, { label: "About Us" }]}
         />
 
         <SectionLabel name="AboutContent" />
@@ -297,10 +285,7 @@ export default function OrganismsPreview() {
         <PageHeader
           title="Contact IGNITE"
           description="Send us your inquiry — bulk quotes, product questions, or partnership conversations. Our procurement team responds within 24 hours."
-          breadcrumb={[
-            { label: "Home", href: "/" },
-            { label: "Contact Us" },
-          ]}
+          breadcrumb={[{ label: "Home", href: "/" }, { label: "Contact Us" }]}
         />
 
         <SectionLabel name="ContactCard" />
