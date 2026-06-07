@@ -17,6 +17,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   return (
     <div className="min-h-screen bg-[var(--bg-surface-muted)] text-[var(--fg-primary)]">
+      <a href="#admin-main" className="skip-link">
+        Skip to content
+      </a>
       <header className="border-b border-[var(--border-default)] bg-white">
         <div className="container-site flex items-center justify-between py-3">
           <div className="flex items-center gap-6">
@@ -46,7 +49,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           </div>
         </div>
       </header>
-      <main className="container-site py-8">{children}</main>
+      <main id="admin-main" className="container-site py-8">
+        {children}
+      </main>
     </div>
   );
 }

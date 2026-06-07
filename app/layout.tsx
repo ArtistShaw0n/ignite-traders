@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     title: "IGNITE — Protective Wear for Pharma Production",
     description:
       "IGNITE delivers gowns, gloves, masks, shoes and lab safety gear — built for pharmaceutical production lines.",
-    locale: "en_US",
+    locale: "en_BD",
     url: SITE_URL,
   },
   twitter: {
