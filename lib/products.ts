@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { and, asc, desc, eq, ne } from "drizzle-orm";
 import { db } from "@/db/client";
 import { products as productsTable } from "@/db/schema";
@@ -10,16 +11,13 @@ export interface ProductBadge {
 /**
  * Product shape used across the marketing site.
  *
- * Sourced from the `products` table in Postgres (Phase 7). The shape is
- * deliberately kept close to the pre-Phase-7 JSON layout so existing
- * consumers (cards, hero, JSON-LD, sitemap) don't need to be rewritten —
- * we adapt at the boundary instead.
+ * Sourced from the `products` table in Postgres. The shape is deliberately
+ * kept close to the legacy JSON layout so existing consumers (cards, hero,
+ * JSON-LD, sitemap) don't need to be rewritten — we adapt at the boundary.
  *
- * Notes:
- * - `id` (UUID) is exposed so per-product forms can submit a real FK.
- * - `category` is the slug used in URLs (`/products?category=gloves`),
- *   matching the legacy `category` field. The DB column is `category_slug`.
- * - `sizes` is joined back to a comma-separated string for card display.
+ * Read helpers are wrapped in React `cache()` so the same query within a
+ * single request is deduped (e.g. a product page's generateMetadata + the
+ * page body both call getProductBySlug → one DB round-trip, not two).
  */
 export interface ProductImageRef {
   url: string;
@@ -50,9 +48,7 @@ type DbProduct = typeof productsTable.$inferSelect;
 function fromDb(row: DbProduct): Product {
   const badge = (row.badge as ProductBadge | null) ?? undefined;
   const images: ProductImageRef[] = Array.isArray(row.images)
-    ? (row.images as ProductImageRef[]).filter(
-        (i) => i && typeof i.url === "string",
-      )
+    ? (row.images as ProductImageRef[]).filter((i) => i && typeof i.url === "string")
     : [];
   return {
     id: row.id,
@@ -72,24 +68,20 @@ function fromDb(row: DbProduct): Product {
   };
 }
 
-export async function getAllProducts(): Promise<Product[]> {
+export const getAllProducts = cache(async (): Promise<Product[]> => {
   const rows = await db
     .select()
     .from(productsTable)
     .orderBy(asc(productsTable.sortOrder), asc(productsTable.title));
   return rows.map(fromDb);
-}
+});
 
-export async function getProductBySlug(slug: string): Promise<Product | undefined> {
-  const [row] = await db
-    .select()
-    .from(productsTable)
-    .where(eq(productsTable.slug, slug))
-    .limit(1);
+export const getProductBySlug = cache(async (slug: string): Promise<Product | undefined> => {
+  const [row] = await db.select().from(productsTable).where(eq(productsTable.slug, slug)).limit(1);
   return row ? fromDb(row) : undefined;
-}
+});
 
-export async function getProductsByCategory(category: string): Promise<Product[]> {
+export const getProductsByCategory = cache(async (category: string): Promise<Product[]> => {
   if (category === "all") return getAllProducts();
   const rows = await db
     .select()
@@ -97,27 +89,21 @@ export async function getProductsByCategory(category: string): Promise<Product[]
     .where(eq(productsTable.categorySlug, category))
     .orderBy(asc(productsTable.sortOrder), asc(productsTable.title));
   return rows.map(fromDb);
-}
+});
 
-export async function getRelatedProducts(
-  current: Product,
-  limit = 4,
-): Promise<Product[]> {
+export const getRelatedProducts = cache(async (current: Product, limit = 4): Promise<Product[]> => {
   const rows = await db
     .select()
     .from(productsTable)
     .where(
-      and(
-        eq(productsTable.categorySlug, current.category),
-        ne(productsTable.slug, current.slug),
-      ),
+      and(eq(productsTable.categorySlug, current.category), ne(productsTable.slug, current.slug)),
     )
     .orderBy(asc(productsTable.sortOrder), asc(productsTable.title))
     .limit(limit);
   return rows.map(fromDb);
-}
+});
 
-export async function getFeaturedProducts(limit = 4): Promise<Product[]> {
+export const getFeaturedProducts = cache(async (limit = 4): Promise<Product[]> => {
   const rows = await db
     .select()
     .from(productsTable)
@@ -125,9 +111,9 @@ export async function getFeaturedProducts(limit = 4): Promise<Product[]> {
     .orderBy(asc(productsTable.sortOrder), asc(productsTable.title))
     .limit(limit);
   return rows.map(fromDb);
-}
+});
 
-export async function getBestsellers(limit = 4): Promise<Product[]> {
+export const getBestsellers = cache(async (limit = 4): Promise<Product[]> => {
   const rows = await db
     .select()
     .from(productsTable)
@@ -135,9 +121,9 @@ export async function getBestsellers(limit = 4): Promise<Product[]> {
     .orderBy(desc(productsTable.sortOrder))
     .limit(limit);
   return rows.map(fromDb);
-}
+});
 
-export async function getProtectiveGowns(limit = 4): Promise<Product[]> {
+export const getProtectiveGowns = cache(async (limit = 4): Promise<Product[]> => {
   const rows = await db
     .select()
     .from(productsTable)
@@ -145,7 +131,7 @@ export async function getProtectiveGowns(limit = 4): Promise<Product[]> {
     .orderBy(asc(productsTable.sortOrder), asc(productsTable.title))
     .limit(limit);
   return rows.map(fromDb);
-}
+});
 
 // ---- Admin (raw rows, full fields incl. images/flags) ----
 
@@ -160,13 +146,7 @@ export async function getAllProductRows(): Promise<ProductRow[]> {
 }
 
 /** A single full row by id — backs the admin edit form. */
-export async function getProductRowById(
-  id: string,
-): Promise<ProductRow | null> {
-  const [row] = await db
-    .select()
-    .from(productsTable)
-    .where(eq(productsTable.id, id))
-    .limit(1);
+export async function getProductRowById(id: string): Promise<ProductRow | null> {
+  const [row] = await db.select().from(productsTable).where(eq(productsTable.id, id)).limit(1);
   return row ?? null;
 }
