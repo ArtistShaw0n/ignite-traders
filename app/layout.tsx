@@ -12,7 +12,7 @@ const inter = Inter({
 });
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://ignitetradesbd.com";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://ignitetradersbd.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

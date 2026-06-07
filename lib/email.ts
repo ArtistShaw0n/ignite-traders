@@ -33,7 +33,7 @@ function getResend(): Resend | null {
 // exactly this with ADMIN_EMAIL="" silently routing admin mail to nowhere.
 function getFrom(): string {
   return (
-    process.env.RESEND_FROM_EMAIL || `${SITE_LEGAL_NAME} <no-reply@ignitetradesbd.com>`
+    process.env.RESEND_FROM_EMAIL || `${SITE_LEGAL_NAME} <no-reply@ignitetradersbd.com>`
   );
 }
 
@@ -42,7 +42,7 @@ function getAdminEmail(): string {
 }
 
 function getSiteUrl(): string {
-  return process.env.NEXT_PUBLIC_SITE_URL || "https://ignitetradesbd.com";
+  return process.env.NEXT_PUBLIC_SITE_URL || "https://ignitetradersbd.com";
 }
 
 async function logSend(entry: NewEmailLog): Promise<void> {

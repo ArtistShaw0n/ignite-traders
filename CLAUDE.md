@@ -133,7 +133,7 @@ When the user says "save progress", "EOD", "end of day", "switching machines", o
 - No inline styles, no CSS modules — Tailwind classes only
 
 ### Environment
-- Read site URL from `process.env.NEXT_PUBLIC_SITE_URL` (falls back to `https://ignitetradesbd.com`)
+- Read site URL from `process.env.NEXT_PUBLIC_SITE_URL` (falls back to `https://ignitetradersbd.com`)
 - Vercel: env var is set in **Production**, **Preview**, and **Development** to `https://ignite-traders.vercel.app`
 - Local: copy `.env.example` → `.env.local` if you need overrides
 

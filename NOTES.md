@@ -52,7 +52,7 @@ working contact form → DB, Resend emails — were done in the prior session).
   `RESEND_WEBHOOK_SECRET` in Vercel (Production+Preview) + redeploy. Until then the
   route returns 500 "not configured" (harmless; sending still works).
 - **Resend domain not verified.** Sender unverified / sandbox — can only deliver to
-  the verified Resend account inbox. Verify `ignitetradesbd.com` for production email.
+  the verified Resend account inbox. Verify `ignitetradersbd.com` for production email.
 - **Clerk on dev keys.** Fine for `*.vercel.app`; switch to production keys when the
   real domain goes live.
 - **Hobby env note:** Clerk + Blob creds live in Production+Preview only (Development
@@ -63,7 +63,7 @@ working contact form → DB, Resend emails — were done in the prior session).
 1. (Optional) Activate the Phase 9 Resend webhook (see blockers).
 2. Upload real product photos via `/admin/products` (catalog shows the silhouette
    placeholder until then).
-3. (Optional) Verify `ignitetradesbd.com` on Resend → production email.
+3. (Optional) Verify `ignitetradersbd.com` on Resend → production email.
 4. At real-domain launch: Clerk production keys + set `NEXT_PUBLIC_SITE_URL`.
 5. Future polish: inquiries-list pagination at volume; product image reordering;
    Bangla email templates (currently English-only).

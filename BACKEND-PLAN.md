@@ -258,7 +258,7 @@ Added to Vercel (Production + Preview + Development):
 | `CLERK_SECRET_KEY` | Auto by Clerk Marketplace | Secret |
 | `NEXT_PUBLIC_CLERK_SIGN_IN_URL` | Manual | `/sign-in` |
 | `RESEND_API_KEY` | Manual (Resend dashboard) | |
-| `RESEND_FROM_EMAIL` | Manual | e.g. `no-reply@ignitetradesbd.com` (needs domain verification) |
+| `RESEND_FROM_EMAIL` | Manual | e.g. `no-reply@ignitetradersbd.com` (needs domain verification) |
 | `ADMIN_EMAIL` | Manual | Where inquiry notifications go |
 | `BLOB_READ_WRITE_TOKEN` | Auto by Vercel Blob | Secret |
 | `NEXT_PUBLIC_SITE_URL` | Existing | Already set |
@@ -292,7 +292,7 @@ Each phase is a self-contained PR — testable + deployable on its own. Phases a
 
 | # | Question | Default if no answer |
 |---|---|---|
-| Q1 | Domain for sender email — `no-reply@ignitetradesbd.com` ok? Needs DNS verification on Resend. | Use Resend's onboarding domain initially; switch to brand domain in Phase 3 |
+| Q1 | Domain for sender email — `no-reply@ignitetradersbd.com` ok? Needs DNS verification on Resend. | Use Resend's onboarding domain initially; switch to brand domain in Phase 3 |
 | Q2 | Who's the first admin? (Clerk needs an email to assign `admin` role.) | `shawon221b@gmail.com` (the one in CLAUDE.md context) |
 | Q3 | Spam strategy — honeypot only, or also reCAPTCHA / Vercel BotID? | Honeypot + rate limit in Phase 2; revisit if abuse surfaces |
 | Q4 | Inquiry retention — keep forever, or auto-archive after N months? | Keep forever; add archived flag later |

@@ -8,7 +8,7 @@ export const SITE_TAGLINE =
 export const SITE_PHONE = "01798214677";
 export const SITE_PHONE_ALT = "01786214677";
 export const SITE_WHATSAPP = "8801798214677";
-export const SITE_EMAIL = "tarif@ignitetradesbd.com";
+export const SITE_EMAIL = "tarif@ignitetradersbd.com";
 
 export const SITE_ADDRESS = "6/1 South Kallyanpur, Mirpur Road, Dhaka";
 export const SITE_CITY = "Dhaka";

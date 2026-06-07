@@ -83,10 +83,10 @@ export function Footer({ className }: FooterProps) {
               01798214677
             </a>
             <a
-              href="mailto:tarif@ignitetradesbd.com"
+              href="mailto:tarif@ignitetradersbd.com"
               className="block text-body-sm text-white/70 hover:text-brand-400 transition-colors break-all"
             >
-              tarif@ignitetradesbd.com
+              tarif@ignitetradersbd.com
             </a>
             <p className="text-body-sm text-white/70">
               WhatsApp:{" "}

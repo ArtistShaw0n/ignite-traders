@@ -79,7 +79,7 @@ export function UserConfirmationEmail({
           <Text style={meta}>
             IGNITE Traders · 6/1 South Kallyanpur, Mirpur Road, Dhaka ·{" "}
             <Link href={siteUrl} style={link}>
-              ignitetradesbd.com
+              ignitetradersbd.com
             </Link>
           </Text>
         </Container>
