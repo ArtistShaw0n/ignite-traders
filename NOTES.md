@@ -1,77 +1,89 @@
-# Session Notes — 2026-06-05 (office)
+# Session Notes — 2026-06-08 (office)
 
-> **Milestone: full backend complete (Tier 4).** Tagged `v0.5.0`.
 > Live: https://ignite-traders.vercel.app
+> Big session: replaced Clerk with self-contained auth + worked the whole
+> launch-readiness checklist. All code-side items done, deployed, verified.
 
-## ✅ Completed today
+## ✅ Completed this session
 
-Implemented **all of BACKEND-PLAN.md Phases 4–10** (Phases 1–3 — DB schema,
-working contact form → DB, Resend emails — were done in the prior session).
+### 🔐 Auth: Clerk → fully self-contained (Auth.js)
+- **No external auth service.** Auth.js v5 (Credentials) + `bcryptjs`; login is
+  email + password verified against the `admin_users` table (new `password_hash`
+  column, migration `0004`, applied to Neon). The table **is** the allowlist.
+- New `/admin/sign-in` form + Sign-out; `proxy.ts` (was `middleware.ts`) +
+  `lib/auth.ts` use the Auth.js JWT session. `@clerk/nextjs` removed.
+- **`/admin/admins`**: add admin = email + initial password; remove blocked for
+  the last admin and for yourself.
+- **First admin / password reset:** `npx tsx db/create-admin-user.ts <email> <pw>`
+  (bcrypt-hashed; password never leaves your machine).
+- **Security review (3 adversarial agents) → no bypass found.** Hardened the real
+  gaps: getAdminUser re-checks the DB every request (removing an admin revokes
+  access immediately), constant-time login (dummy bcrypt on unknown email),
+  atomic last-admin guard, 7-day session cap, `AUTH_SECRET` set in Vercel Prod.
 
-- **Phase 7 — Products → Postgres.** Added `sku/material/usage_area/bulk_supply`
-  columns, `badge` → jsonb, `description` NOT NULL (migration `0001`, applied via
-  direct SQL because drizzle-kit migrate hangs on Neon's serverless websocket;
-  recorded in `drizzle.__drizzle_migrations`). New `db/seed.ts` (`npm run db:seed`)
-  upserts the 12 products by slug. `lib/products.ts` is now async + DB-backed; all
-  consumers (`sitemap`, home, `/products`, detail) await it.
-- **Phase 4 — Per-product quote form.** Detail page renders `ContactForm` with
-  `source="product-page"`, `productId={product.id}` (real UUID), `showQuantity`.
-- **Phase 5 — Clerk admin auth.** `middleware.ts` gates `/admin/*` (passes through
-  if Clerk keys absent, so local dev never breaks); `lib/auth.ts` `requireAdmin()` +
-  `getAdminUser()`; `/admin` shell + `/admin/sign-in`. Clerk via Vercel Marketplace.
-- **Phase 6 — Inquiries dashboard.** `/admin/inquiries` (list + status-filter pills
-  w/ counts), `/admin/inquiries/[id]` (detail + optimistic status update + email log),
-  `/admin/inquiries/export` (admin-gated CSV). Landing shows status cards + recent.
-- **Phase 8 — Product CMS.** `/admin/products` CRUD (create/edit/delete + flags),
-  shared `ProductForm`. **Image upload** via `/api/admin/upload-image` → Vercel Blob
-  `put({access:'public'})`; `ImageUploader`; images wired into cards + detail gallery.
-  `next.config` allows `*.public.blob.vercel-storage.com`.
-- **Phase 9 — Resend webhook.** `/api/webhooks/resend` (svix-verified) updates
-  `email_log.status` by `resend_id`. **Code live but NOT activated** (see blockers).
-- **Phase 10 — Analytics + lead source.** `@vercel/analytics` in root layout;
-  lead-source breakdown (bars + %) on the admin dashboard.
+### 🚀 Launch-readiness (7 commits)
+- **Cleanup:** removed "Design System" from public nav; `/design-system` +
+  `/preview` now 404 in production; stripped `[TODO replace verbatim]` markers
+  from About; deleted junk "Test Product by Tasawoof" (`/products/slug`) from DB.
+- **SEO:** per-page canonicals (was: every page canonical'd to homepage = dupes);
+  branded 1200×630 OG share image (`app/opengraph-image.tsx`); product JSON-LD
+  fixed (dropped the invalid price-less Offer, added images).
+- **a11y:** `--fg-muted` darkened to AA (neutral-500→600); global `:focus-visible`
+  ring; heading order; form `aria-invalid`/`aria-describedby`; dark-mode inputs;
+  `role="img"` on logo cards; admin skip-link.
+- **Perf/security:** product reads wrapped in React `cache()`; image-upload route
+  hardened (magic-byte sniff, SVG rejected, server-generated filename); removed
+  unused `framer-motion`.
+- **PWA/polish:** web manifest + branded `app/icon.tsx` + `app/apple-icon.tsx`;
+  OG locale `en_US`→`en_BD`.
+- **chore:** prettier baseline across `app/components/lib/db` (~56 files) so future
+  diffs stay clean. `middleware.ts` → `proxy.ts` (Next 16 deprecation gone).
 
-### Bugs caught & fixed this session
-- **Empty-string env locked admins out:** `ADMIN_EMAIL=""` + `??` (only catches
-  null/undefined) → empty allowlist → everyone redirected. Switched `??` → `||` in
-  `lib/auth.ts` + `lib/email.ts` (also fixed admin emails silently going to "").
-  Set `ADMIN_EMAILS=shawon221b@gmail.com,uiux1.opl@gmail.com` on Vercel.
-- **`/admin` 404 for signed-out users:** Clerk v7 `auth.protect()` throws notFound
-  unless given `unauthenticatedUrl` → added it (redirects to `/admin/sign-in`).
-- **Blob "private store" rejected public images:** the first store was created
-  **private** → `put({access:'public'})` failed. Recreated as **public** via CLI
-  (`vercel blob create-store … --access public`), deleted the private one.
+> Note: inquiry/quote + FAQ were hidden in a prior session (private `_contact` /
+> `_inquiries` folders, code kept). Categories + multi-admin are DB-backed.
 
 ## 🚧 In progress (WIP)
-- None — all 10 phases are code-complete, deployed, and verified.
+- None code-side. Everything above is committed, deployed, and build-verified.
 
-## ❓ Open questions / blockers
-- **Phase 9 webhook not activated.** Needs (a) a webhook at https://resend.com/webhooks
-  → `https://ignite-traders.vercel.app/api/webhooks/resend` for events
-  `email.sent/delivered/bounced/complained`, and (b) its signing secret as
-  `RESEND_WEBHOOK_SECRET` in Vercel (Production+Preview) + redeploy. Until then the
-  route returns 500 "not configured" (harmless; sending still works).
-- **Resend domain not verified.** Sender unverified / sandbox — can only deliver to
-  the verified Resend account inbox. Verify `ignitetradersbd.com` for production email.
-- **Clerk on dev keys.** Fine for `*.vercel.app`; switch to production keys when the
-  real domain goes live.
-- **Hobby env note:** Clerk + Blob creds live in Production+Preview only (Development
-  is locked on Hobby) — local `npm run dev` won't have them; `/admin` won't work
-  locally unless you pull them into `.env.local`.
+## ❓ Open / needs the user (asset · access · DNS · infra)
+1. **Real product images** — upload via `/admin → Products` (cards show the
+   silhouette placeholder until then).
+2. **Domain cutover** — point `ignitetradersbd.com` at Vercel in DeshiHosting
+   (A → `76.76.21.21`), keep MX/SPF/DKIM for email. **Then I** set
+   `NEXT_PUBLIC_SITE_URL=https://ignitetradersbd.com` (Prod/Preview) + redeploy.
+3. **Rate-limiting** on sign-in (only remaining security gap) — provision Upstash
+   Redis (Vercel Marketplace, free) and I'll wire `@upstash/ratelimit`, OR enable
+   a Vercel WAF rate rule on `/api/auth/*`.
+4. **Change the admin password** before launch — the bootstrap one is in a
+   screenshot + shell history. Re-run `create-admin-user.ts` with a new password.
+5. **Resend** — verify `ignitetradersbd.com` (DNS) + set `RESEND_API_KEY` /
+   `RESEND_FROM_EMAIL` / `RESEND_WEBHOOK_SECRET` when email is needed (inquiry is
+   currently hidden, so not urgent).
+6. (Optional) Real permitted client logos for the "Trusted by" section (confirmed
+   real clients — currently styled-text wordmarks); final About copy.
+7. **Preview `AUTH_SECRET`** — set in Vercel only for Production; add to Preview in
+   the dashboard if you ever use preview deploys (main-only workflow → not needed).
+
+## 🟡 Deferred (low priority — ask if you want it)
+- Custom sort `Dropdown` announces `role="listbox"` but isn't a full listbox.
+  It's keyboard-operable; a proper fix = native `<select>` or full ARIA listbox
+  (a design decision, so left as-is).
 
 ## ▶️ Next steps (priority order)
-1. (Optional) Activate the Phase 9 Resend webhook (see blockers).
-2. Upload real product photos via `/admin/products` (catalog shows the silhouette
-   placeholder until then).
-3. (Optional) Verify `ignitetradersbd.com` on Resend → production email.
-4. At real-domain launch: Clerk production keys + set `NEXT_PUBLIC_SITE_URL`.
-5. Future polish: inquiries-list pagination at volume; product image reordering;
-   Bangla email templates (currently English-only).
+1. Upload real product images.
+2. Change the admin password.
+3. DNS cutover → ping me to set `NEXT_PUBLIC_SITE_URL` + redeploy.
+4. Decide rate-limit approach (Upstash vs WAF) → I wire it.
+5. (At launch) Resend domain verify if email is wanted.
 
 ## 🔑 Key facts for the other machine
-- Admin: sign in at `/admin` with `shawon221b@gmail.com` (or `uiux1.opl@gmail.com`).
-- `npm run db:seed` reseeds products; `npm run db:peek` inspects inquiries/email log.
-- Vercel Blob store: `ignite-product-images` (public, `store_pL3yzXHMZwXRTVdf`).
+- **Admin login is now email + password** (NOT Clerk): `/admin/sign-in`.
+  Create/reset an admin: `npx tsx db/create-admin-user.ts <email> <password>`.
+- `AUTH_SECRET` is required — in Vercel Production + `.env.local` (local dev).
+- `npm run db:seed` reseeds products; `npm run db:peek` inspects inquiry/email log.
+- Vercel Blob store: `ignite-product-images` (public).
+- Real domain is `ignitetradersbd.com` (with the "r"). Code falls back to it when
+  `NEXT_PUBLIC_SITE_URL` is unset.
 - Never paste API keys/tokens in chat; never commit `.env.local`.
 
 ## ⚠️ Multi-device / cloud-sync note for whoever picks this up
