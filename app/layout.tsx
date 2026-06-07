@@ -11,8 +11,7 @@ const inter = Inter({
   display: "swap",
 });
 
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://ignitetradersbd.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://ignitetradersbd.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

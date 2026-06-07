@@ -1,4 +1,3 @@
-import { ShieldCheck } from "lucide-react";
 import { requireAdmin } from "@/lib/auth";
 import { listAdmins } from "@/lib/admins";
 import { AddAdminForm } from "@/app/admin/_components/AddAdminForm";
@@ -10,15 +9,15 @@ export const metadata = {
 };
 
 export default async function AdminsPage() {
-  await requireAdmin();
+  const me = await requireAdmin();
   const admins = await listAdmins();
 
   return (
     <div className="mx-auto max-w-3xl">
       <h1 className="text-h2 font-bold tracking-tight">Admins</h1>
       <p className="mt-1 text-body-sm text-[var(--fg-muted)]">
-        Anyone listed here can sign in to the admin. Permanent admins come from the server config
-        and can&apos;t be removed here.
+        Anyone listed here can sign in with their email + password. Share the password you set with
+        each new admin. The last admin can&apos;t be removed.
       </p>
 
       <div className="mt-6 rounded-xl border border-[var(--border-default)] bg-white p-5">
@@ -30,35 +29,32 @@ export default async function AdminsPage() {
           <thead className="border-b border-[var(--border-default)] bg-[var(--bg-surface-muted)] text-caption uppercase tracking-wide text-[var(--fg-muted)]">
             <tr>
               <th className="px-4 py-3 font-semibold">Email</th>
-              <th className="px-4 py-3 font-semibold">Type</th>
+              <th className="px-4 py-3 font-semibold">Added by</th>
               <th className="px-4 py-3 text-right font-semibold"></th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[var(--border-default)]">
-            {admins.map((a) => (
-              <tr key={a.id ?? `env:${a.email}`} className="hover:bg-[var(--bg-surface-muted)]">
-                <td className="px-4 py-3 font-medium">{a.email}</td>
-                <td className="px-4 py-3 text-[var(--fg-muted)]">
-                  {a.source === "env" ? (
-                    <span className="inline-flex items-center gap-1.5">
-                      <ShieldCheck size={14} aria-hidden="true" />
-                      Permanent
-                    </span>
-                  ) : a.addedBy ? (
-                    `Added by ${a.addedBy}`
-                  ) : (
-                    "Added"
-                  )}
-                </td>
-                <td className="px-4 py-3 text-right">
-                  {a.source === "db" && a.id ? (
-                    <RemoveAdminButton id={a.id} email={a.email} />
-                  ) : (
-                    <span className="text-caption text-[var(--fg-muted)]">—</span>
-                  )}
-                </td>
-              </tr>
-            ))}
+            {admins.map((a) => {
+              const isSelf = a.email === me.email.toLowerCase();
+              return (
+                <tr key={a.id} className="hover:bg-[var(--bg-surface-muted)]">
+                  <td className="px-4 py-3 font-medium">
+                    {a.email}
+                    {isSelf && (
+                      <span className="ml-2 text-caption text-[var(--fg-muted)]">(you)</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-[var(--fg-muted)]">{a.addedBy ?? "—"}</td>
+                  <td className="px-4 py-3 text-right">
+                    {admins.length > 1 && !isSelf ? (
+                      <RemoveAdminButton id={a.id} email={a.email} />
+                    ) : (
+                      <span className="text-caption text-[var(--fg-muted)]">—</span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

@@ -1,11 +1,11 @@
 "use server";
 
-import { eq } from "drizzle-orm";
+import bcrypt from "bcryptjs";
+import { eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db/client";
 import { adminUsers } from "@/db/schema";
 import { requireAdmin } from "@/lib/auth";
-import { ENV_ADMIN_EMAILS } from "@/lib/admins";
 
 export type AdminActionResult = { ok: true } | { ok: false; error: string };
 
@@ -20,12 +20,13 @@ export async function addAdmin(
   const email = String(formData.get("email") ?? "")
     .trim()
     .toLowerCase();
+  const password = String(formData.get("password") ?? "");
 
-  if (!email || !EMAIL_RE.test(email)) {
+  if (!EMAIL_RE.test(email)) {
     return { ok: false, error: "Enter a valid email address." };
   }
-  if (ENV_ADMIN_EMAILS.includes(email)) {
-    return { ok: false, error: "That email is already a permanent admin." };
+  if (password.length < 8) {
+    return { ok: false, error: "Password must be at least 8 characters." };
   }
 
   const [existing] = await db
@@ -38,7 +39,8 @@ export async function addAdmin(
   }
 
   try {
-    await db.insert(adminUsers).values({ email, addedBy: me.email });
+    const passwordHash = await bcrypt.hash(password, 10);
+    await db.insert(adminUsers).values({ email, passwordHash, addedBy: me.email });
     revalidatePath("/admin/admins");
   } catch (err) {
     console.error("addAdmin failed", err);
@@ -49,9 +51,21 @@ export async function addAdmin(
 }
 
 export async function removeAdmin(id: string): Promise<{ ok: boolean; error?: string }> {
-  await requireAdmin();
+  const me = await requireAdmin();
 
   try {
+    const [target] = await db.select().from(adminUsers).where(eq(adminUsers.id, id)).limit(1);
+    if (!target) return { ok: false, error: "Admin not found." };
+
+    if (target.email.toLowerCase() === me.email.toLowerCase()) {
+      return { ok: false, error: "You can't remove your own admin access." };
+    }
+
+    const [{ count }] = await db.select({ count: sql<number>`count(*)::int` }).from(adminUsers);
+    if (count <= 1) {
+      return { ok: false, error: "Can't remove the last admin." };
+    }
+
     await db.delete(adminUsers).where(eq(adminUsers.id, id));
     revalidatePath("/admin/admins");
     return { ok: true };

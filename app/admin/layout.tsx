@@ -1,45 +1,52 @@
 import Link from "next/link";
-import { ClerkProvider, UserButton } from "@clerk/nextjs";
+import { auth } from "@/auth";
+import { signOutAction } from "@/app/actions/auth";
 import { AdminNav } from "@/app/admin/_components/AdminNav";
 
-/**
- * Admin layout — adds ClerkProvider so client hooks (UserButton, useUser)
- * work in this subtree only, keeping Clerk JS out of the marketing bundle.
- *
- * Also fetches the count of `new` inquiries (only for a signed-in admin) so
- * the nav can show a notification badge. Cheap COUNT query; runs per admin
- * page load, and the status-update action revalidates these paths so the
- * badge stays current.
- */
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <ClerkProvider
-      signInUrl="/admin/sign-in"
-      signInForceRedirectUrl="/admin"
-      signInFallbackRedirectUrl="/admin"
-    >
+  const session = await auth();
+
+  // Signed out (e.g. the sign-in page) — render bare, without admin chrome.
+  if (!session?.user) {
+    return (
       <div className="min-h-screen bg-[var(--bg-surface-muted)] text-[var(--fg-primary)]">
-        <header className="border-b border-[var(--border-default)] bg-white">
-          <div className="container-site flex items-center justify-between py-3">
-            <div className="flex items-center gap-6">
-              <Link href="/admin" className="text-body-sm font-bold tracking-tight">
-                IGNITE Admin
-              </Link>
-              <AdminNav />
-            </div>
-            <div className="flex items-center gap-4">
-              <Link
-                href="/"
-                className="text-caption text-[var(--fg-muted)] hover:text-[var(--fg-primary)]"
-              >
-                View site →
-              </Link>
-              <UserButton appearance={{ elements: { avatarBox: "w-8 h-8" } }} />
-            </div>
-          </div>
-        </header>
-        <main className="container-site py-8">{children}</main>
+        {children}
       </div>
-    </ClerkProvider>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[var(--bg-surface-muted)] text-[var(--fg-primary)]">
+      <header className="border-b border-[var(--border-default)] bg-white">
+        <div className="container-site flex items-center justify-between py-3">
+          <div className="flex items-center gap-6">
+            <Link href="/admin" className="text-body-sm font-bold tracking-tight">
+              IGNITE Admin
+            </Link>
+            <AdminNav />
+          </div>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/"
+              className="text-caption text-[var(--fg-muted)] hover:text-[var(--fg-primary)]"
+            >
+              View site →
+            </Link>
+            <span className="hidden text-caption text-[var(--fg-muted)] sm:inline">
+              {session.user.email}
+            </span>
+            <form action={signOutAction}>
+              <button
+                type="submit"
+                className="rounded-md border border-[var(--border-default)] px-3 py-1.5 text-body-sm font-semibold hover:bg-[var(--bg-surface-muted)]"
+              >
+                Sign out
+              </button>
+            </form>
+          </div>
+        </div>
+      </header>
+      <main className="container-site py-8">{children}</main>
+    </div>
   );
 }

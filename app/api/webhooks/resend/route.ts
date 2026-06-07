@@ -9,9 +9,8 @@ import { emailLog } from "@/db/schema";
  * create the webhook in the Resend dashboard) and then advance the matching
  * email_log row's status.
  *
- * Not behind Clerk — it's a machine-to-machine call. Clerk middleware runs
- * on /api/* but only attaches auth; it doesn't block. The svix signature IS
- * the authentication here.
+ * Not behind admin auth — it's a machine-to-machine call. The svix signature
+ * IS the authentication here.
  */
 type ResendEvent = {
   type?: string;

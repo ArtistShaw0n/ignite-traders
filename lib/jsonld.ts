@@ -10,8 +10,7 @@ import {
 } from "./site";
 import type { Product } from "./products";
 
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://ignitetradersbd.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://ignitetradersbd.com";
 
 /** Organization JSON-LD — used in the root layout. */
 export function organizationJsonLd() {
