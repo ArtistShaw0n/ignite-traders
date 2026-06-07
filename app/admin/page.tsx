@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { FolderTree, Package } from "lucide-react";
+import { FolderTree, Package, Users } from "lucide-react";
 import { requireAdmin } from "@/lib/auth";
 import { getAllProductRows } from "@/lib/products";
 import { getCategories } from "@/lib/categories";
+import { listAdmins } from "@/lib/admins";
 
 export const metadata = {
   title: "Admin",
@@ -11,9 +12,10 @@ export const metadata = {
 
 export default async function AdminHomePage() {
   const { email } = await requireAdmin();
-  const [products, cats] = await Promise.all([
+  const [products, cats, admins] = await Promise.all([
     getAllProductRows(),
     getCategories(),
+    listAdmins(),
   ]);
 
   return (
@@ -35,6 +37,12 @@ export default async function AdminHomePage() {
           icon={<FolderTree size={22} aria-hidden="true" />}
           title="Categories"
           desc={`${cats.length} categories`}
+        />
+        <NavCard
+          href="/admin/admins"
+          icon={<Users size={22} aria-hidden="true" />}
+          title="Admins"
+          desc={`${admins.length} with access`}
         />
       </div>
     </div>

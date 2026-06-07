@@ -45,12 +45,8 @@ export const products = pgTable(
     bestseller: boolean("bestseller").notNull().default(false),
     isProtectiveGown: boolean("is_protective_gown").notNull().default(false),
     sortOrder: integer("sort_order").notNull().default(0),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
-    updatedAt: timestamp("updated_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
     index("products_slug_idx").on(t.slug),
@@ -74,12 +70,8 @@ export const categories = pgTable(
     slug: text("slug").notNull().unique(),
     label: text("label").notNull(),
     sortOrder: integer("sort_order").notNull().default(0),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
-    updatedAt: timestamp("updated_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index("categories_sort_order_idx").on(t.sortOrder)],
 );
@@ -120,12 +112,8 @@ export const inquiries = pgTable(
     // Meta
     ipHash: text("ip_hash"),
     userAgent: text("user_agent"),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
-    updatedAt: timestamp("updated_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
     index("inquiries_status_idx").on(t.status),
@@ -160,9 +148,21 @@ export const emailLog = pgTable("email_log", {
   resendId: text("resend_id"),
   status: emailStatusEnum("status").notNull().default("queued"),
   error: text("error"),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+/**
+ * Admin users — extra admins added through the admin UI. Permanent superadmins
+ * come from the ADMIN_EMAILS env var (see lib/admins.ts); this table holds the
+ * additional ones so access can be managed without a redeploy.
+ */
+export const adminUsers = pgTable("admin_users", {
+  id: uuid("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  email: text("email").notNull().unique(),
+  addedBy: text("added_by"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
 // ---- Inferred types (use these everywhere instead of hand-writing) ----
@@ -174,3 +174,5 @@ export type EmailLog = typeof emailLog.$inferSelect;
 export type NewEmailLog = typeof emailLog.$inferInsert;
 export type Category = typeof categories.$inferSelect;
 export type NewCategory = typeof categories.$inferInsert;
+export type AdminUserRow = typeof adminUsers.$inferSelect;
+export type NewAdminUserRow = typeof adminUsers.$inferInsert;

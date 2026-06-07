@@ -2,26 +2,7 @@ import "server-only";
 
 import { redirect } from "next/navigation";
 import { currentUser } from "@clerk/nextjs/server";
-
-/**
- * Email allowlist — only these addresses count as admins. Set via
- * `ADMIN_EMAILS` env var as a comma-separated list. Falls back to
- * `ADMIN_EMAIL` (singular, also used by the email-notification flow)
- * and then a hardcoded default so dev environments aren't locked out.
- *
- * NOTE: `||` not `??` — an env var set to an empty string ("") is a real
- * (and easy-to-hit) misconfiguration. `??` only falls through on
- * null/undefined, so `ADMIN_EMAIL=""` would yield an EMPTY allowlist and
- * lock everyone out. `||` treats "" as absent and falls back correctly.
- */
-const ADMIN_EMAILS = (
-  process.env.ADMIN_EMAILS ||
-  process.env.ADMIN_EMAIL ||
-  "shawon221b@gmail.com"
-)
-  .split(",")
-  .map((e) => e.trim().toLowerCase())
-  .filter(Boolean);
+import { getAllowlistedEmails } from "./admins";
 
 export type AdminUser = { userId: string; email: string };
 
@@ -35,13 +16,12 @@ async function resolveAdmin(): Promise<AdminResolution> {
   if (!user) return { status: "signed-out" };
 
   const primaryEmail =
-    user.emailAddresses.find((e) => e.id === user.primaryEmailAddressId)
-      ?.emailAddress ?? user.emailAddresses[0]?.emailAddress;
+    user.emailAddresses.find((e) => e.id === user.primaryEmailAddressId)?.emailAddress ??
+    user.emailAddresses[0]?.emailAddress;
 
-  const allEmails = user.emailAddresses.map((e) =>
-    e.emailAddress.toLowerCase(),
-  );
-  const isAdmin = allEmails.some((e) => ADMIN_EMAILS.includes(e));
+  const allEmails = user.emailAddresses.map((e) => e.emailAddress.toLowerCase());
+  const allowlist = await getAllowlistedEmails();
+  const isAdmin = allEmails.some((e) => allowlist.has(e));
   if (!isAdmin) return { status: "forbidden" };
 
   return {
