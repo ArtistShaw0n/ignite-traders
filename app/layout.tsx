@@ -12,6 +12,8 @@ const inter = Inter({
 });
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://ignitetradersbd.com";
+// Staging deployments set NOINDEX=1 — keeps the site out of search until launch.
+const NOINDEX = process.env.NOINDEX === "1";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -51,17 +53,19 @@ export const metadata: Metadata = {
     description:
       "IGNITE delivers gowns, gloves, masks, shoes and lab safety gear — built for pharmaceutical production lines.",
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-      "max-video-preview": -1,
-    },
-  },
+  robots: NOINDEX
+    ? { index: false, follow: false }
+    : {
+        index: true,
+        follow: true,
+        googleBot: {
+          index: true,
+          follow: true,
+          "max-image-preview": "large",
+          "max-snippet": -1,
+          "max-video-preview": -1,
+        },
+      },
   alternates: {
     canonical: "/",
   },
