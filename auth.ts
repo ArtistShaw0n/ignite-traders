@@ -10,6 +10,26 @@ import { authConfig } from "./auth.config";
 // login timing doesn't reveal which emails are registered admins.
 const DUMMY_HASH = "$2b$10$eGDsGpy4.ZLvl7EW7sORk.5oZupAQvt0fkrJhmaMqY/vWbuyFJyue";
 
+// Lightweight in-process rate limiter (per Fluid Compute instance). Stops
+// brute-force / credential-stuffing BEFORE the DB + bcrypt work — which also
+// removes the bcrypt CPU-exhaustion vector. For limiting that spans instances,
+// swap this for @upstash/ratelimit once Upstash Redis is provisioned (NOTES.md).
+const RL_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
+const RL_MAX = 10; // attempts per window per IP
+const rlHits = new Map<string, { count: number; resetAt: number }>();
+
+function tooManyAttempts(ip: string): boolean {
+  const now = Date.now();
+  if (rlHits.size > 10_000) rlHits.clear(); // crude memory bound
+  const rec = rlHits.get(ip);
+  if (!rec || now > rec.resetAt) {
+    rlHits.set(ip, { count: 1, resetAt: now + RL_WINDOW_MS });
+    return false;
+  }
+  rec.count += 1;
+  return rec.count > RL_MAX;
+}
+
 /**
  * Self-contained admin auth. A login succeeds only if the email exists in the
  * admin_users table AND the bcrypt password matches — the table IS the
@@ -23,7 +43,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      authorize: async (credentials) => {
+      authorize: async (credentials, request) => {
+        const fwd = request.headers.get("x-forwarded-for");
+        const ip = fwd?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
+        if (tooManyAttempts(ip)) return null;
+
         const email = String(credentials?.email ?? "")
           .trim()
           .toLowerCase();
