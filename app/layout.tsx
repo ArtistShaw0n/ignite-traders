@@ -84,8 +84,9 @@ const themeInitScript = `
   (function(){
     try {
       var stored = localStorage.getItem('theme');
-      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      var theme = stored || (prefersDark ? 'dark' : 'light');
+      // Default to light on first visit (ignore the OS preference); honor the
+      // user's explicit choice once they've toggled.
+      var theme = stored || 'light';
       if (theme === 'dark') document.documentElement.classList.add('dark');
     } catch (e) {}
   })();

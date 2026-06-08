@@ -16,7 +16,7 @@ function readInitialTheme(): Theme {
   try {
     const stored = localStorage.getItem("theme") as Theme | null;
     if (stored === "light" || stored === "dark") return stored;
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    return "light"; // default to light on first visit (ignore OS preference)
   } catch {
     return "light";
   }
