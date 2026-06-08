@@ -80,25 +80,6 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-const themeInitScript = `
-  (function(){
-    try {
-      // One-time reset: an earlier version auto-saved the OS theme (so dark-OS
-      // visitors got dark without choosing it). Clear that stale value once so
-      // the new light default applies; explicit toggles after this are kept.
-      if (!localStorage.getItem('theme-reset-v2')) {
-        localStorage.removeItem('theme');
-        localStorage.setItem('theme-reset-v2', '1');
-      }
-      var stored = localStorage.getItem('theme');
-      // Default to light on first visit (ignore the OS preference); honor the
-      // user's explicit choice once they've toggled.
-      var theme = stored || 'light';
-      if (theme === 'dark') document.documentElement.classList.add('dark');
-    } catch (e) {}
-  })();
-`;
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -107,9 +88,6 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col">
-        <Script id="theme-init" strategy="beforeInteractive">
-          {themeInitScript}
-        </Script>
         <Script
           id="ld-organization"
           type="application/ld+json"
